@@ -571,7 +571,7 @@ $(document).ready(function(){
         
         
         equal(c.draw.coord.origin.X,30.5, "origin.X is OK" );
-        equal(c.draw.coord.origin.Y,0, "origin.Y is OK" );
+        equal(c.draw.coord.origin.Y,30, "origin.Y is OK" );
         
     });
 

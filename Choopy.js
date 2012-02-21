@@ -543,8 +543,6 @@ var Choopy = (function(){
         this.draw.sets.legend.x=labels;
     }
 
-
-
     Choopy.prototype.drawLine=function(idSerie,color,howToScale){
         var serie=this.draw.r.set()
         var values=this.data.series[idSerie].data
@@ -588,8 +586,7 @@ var Choopy = (function(){
             'lines':pathes
         }
     }
-
-
+    
     Choopy.prototype.joinPlots=function(idSerie,serie){
         var pathes,p;
         //pour chaque cohort
@@ -692,6 +689,7 @@ var Choopy = (function(){
         return this.draw.r.set(ppp,textLabel).hide()
         
     }
+    
     Choopy.prototype.drawTooltipForColumn=function(column,x,y){
         var ppp,textLabel;
         textLabel=this.draw.r.set()
@@ -757,6 +755,7 @@ var Choopy = (function(){
 
     
     }
+    
     Choopy.prototype.drawTransverses=function(){
         var p;
      
@@ -783,6 +782,7 @@ var Choopy = (function(){
     
         this.draw.grid.toBack()
     }
+    
     Choopy.prototype.hover=function(elem){
         var self=this
         elem.hover(function(){
@@ -807,6 +807,7 @@ var Choopy = (function(){
             }
         })
     }
+    
     Choopy.prototype.utils={
         trim:function (str) {
             var	str = str.replace(/^\s\s*/, ''),
