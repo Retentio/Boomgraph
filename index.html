@@ -29,8 +29,8 @@ and open the template in the editor.
                     width:400,
                     height:300,
                     grid:{
-                        range:{
-                            y:5 
+                        y:{
+                            range:5 
                         },
                         ticker:{
                             x:1
@@ -51,6 +51,7 @@ and open the template in the editor.
                         sub=data.series[x].data[y]+'% still active in '+data.labels.x[x];
                       return {title:title,sub:sub}  
                     }
+                options.grid.y.startAt=0;
                 e=new Column(options)
                 options.container='titi2'
                 e=new Line(options)
@@ -94,6 +95,11 @@ and open the template in the editor.
                     container:'sparckarea',
                     color :{
                         serie:['#86B00E','#7E0EB0','#116300','#064D65','#653604']
+                    }, 
+                    grid:{
+                        y:{
+                            startAt:0 
+                        }
                     }
                    
                 }
@@ -111,6 +117,11 @@ and open the template in the editor.
                     container:'sparckbar',
                     color :{
                         serie:['#B00E86','#86B00E','#7E0EB0','#116300','#064D65','#653604']
+                    }, 
+                    grid:{
+                        y:{
+                            startAt:0 
+                        }
                     }
                    
                 }

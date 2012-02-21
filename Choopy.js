@@ -205,8 +205,70 @@ Raphael.el.andClose=function(){
         return out;
     };
 })();
-
-var ChoopyError
+/*!
+ * g.Raphael 0.5 - Charting library, based on Raphaël
+ *
+ * Copyright (c) 2009 Dmitry Baranovskiy (http://g.raphaeljs.com)
+ * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
+ */
+//Raphael.el.popup=function(d,k,h,g){
+//    var c=this.paper||this[0].paper,f,j,b,e,a;
+//    if(!c){
+//        return
+//    }
+//    switch(this.type){
+//        case"text":case"circle":case"ellipse":
+//            b=true;
+//            break;
+//        default:
+//            b=false
+//    }
+//    d=d==null?"up":d;
+//    k=k||5;
+//    f=this.getBBox();
+//    h=typeof h=="number"?h:(b?f.x+f.width/2:f.x);
+//    g=typeof g=="number"?g:(b?f.y+f.height/2:f.y);
+//    e=Math.max(f.width/2-k,0);
+//    a=Math.max(f.height/2-k,0);
+//    this.translate(h-f.x-(b?f.width/2:0),g-f.y-(b?f.height/2:0));
+//    f=this.getBBox();
+//    var i={
+//        up:["M",h,g,"l",-k,-k,-e,0,"a",k,k,0,0,1,-k,-k,"l",0,-f.height,"a",k,k,0,0,1,k,-k,"l",k*2+e*2,0,"a",k,k,0,0,1,k,k,"l",0,f.height,"a",k,k,0,0,1,-k,k,"l",-e,0,"z"].join(","),
+//        down:["M",h,g,"l",k,k,e,0,"a",k,k,0,0,1,k,k,"l",0,f.height,"a",k,k,0,0,1,-k,k,"l",-(k*2+e*2),0,"a",k,k,0,0,1,-k,-k,"l",0,-f.height,"a",k,k,0,0,1,k,-k,"l",e,0,"z"].join(","),
+//        left:["M",h,g,"l",-k,k,0,a,"a",k,k,0,0,1,-k,k,"l",-f.width,0,"a",k,k,0,0,1,-k,-k,"l",0,-(k*2+a*2),"a",k,k,0,0,1,k,-k,"l",f.width,0,"a",k,k,0,0,1,k,k,"l",0,a,"z"].join(","),
+//        right:["M",h,g,"l",k,-k,0,-a,"a",k,k,0,0,1,k,-k,"l",f.width,0,"a",k,k,0,0,1,k,k,"l",0,k*2+a*2,"a",k,k,0,0,1,-k,k,"l",-f.width,0,"a",k,k,0,0,1,-k,-k,"l",0,-a,"z"].join(",")
+//    };
+//        
+//    j={
+//        up:{
+//            x:-!b*(f.width/2),
+//            y:-k*2-(b?f.height/2:f.height)
+//        },
+//        down:{
+//            x:-!b*(f.width/2),
+//            y:k*2+(b?f.height/2:f.height)
+//        },
+//        left:{
+//            x:-k*2-(b?f.width/2:f.width),
+//            y:-!b*(f.height/2)
+//        },
+//        right:{
+//            x:k*2+(b?f.width/2:f.width),
+//            y:-!b*(f.height/2)
+//        }
+//    }
+//    [d];
+//    this.translate(j.x,j.y);
+//    return c.path(i[d]).attr({
+//        fill:"#000",
+//        stroke:"none"
+//    }).insertBefore(this.node?this:this[0])
+//};
+//Raphael.fn.popup=function(a,f,d,b,c){
+//    var e=this.set();
+//    d=this.text(a,f,d)
+//    return e.push(d.popup(b,c),d)
+//};   
 
 var Choopy = (function(){
 
@@ -475,9 +537,10 @@ var Choopy = (function(){
         this.draw.coord.origin.Y=this.options.gutter.top
     
         //scaling
-        var maxValue=minValue=this.data.series[0].data[0],
-        minValue=maxValue;
-   
+        var maxValue=this.data.series[0].data[0],minValue=maxValue;
+        if(this.options.grid.y.startAt!==false){
+            minValue=this.options.grid.y.startAt
+        }
         for(var i= 0; i < this.data.series.length; i++) {
             for(var j= 0; j < this.data.series[i].data.length; j++) {
                 tmp=parseFloat(this.data.series[i].data[j])
@@ -493,13 +556,16 @@ var Choopy = (function(){
     
         var yMin=minValue,
         yMax=maxValue,
-        yStep=(maxValue-minValue)/this.options.grid.range.y;
+        yStep=(maxValue-minValue)/this.options.grid.y.range;
     
         //enlarge min & max values by one yStep to get bottom and top margin
-        yMin-=yStep;
+        if(this.options.grid.y.startAt===false){
+            yMin-=yStep;
+        }
         yMax+=yStep;
-        yStep=(yMax-yMin)/this.options.grid.range.y;
+        yStep=(yMax-yMin)/this.options.grid.y.range;
     
+   
         this.draw.coord.scale.y.minValue=yMin
         this.draw.coord.scale.y.maxValue=yMax
         this.draw.coord.scale.y.step=(this.options.height - this.options.gutter.top - this.options.gutter.bottom)/(yMax-yMin)
@@ -517,7 +583,7 @@ var Choopy = (function(){
         w=this.options.width - (this.options.gutter.left + this.options.gutter.right), 
         h=this.options.height - this.options.gutter.top - this.options.gutter.bottom, 
         wv=this.data.countSerie*this.data.labels.x.length, 
-        numTickerY=this.options.grid.range.y,
+        numTickerY=this.options.grid.y.range,
         scale=this.draw.coord.scale,
         color=this.options.color.grid
         
@@ -866,8 +932,9 @@ var Choopy = (function(){
             left:30
         },
         grid:{
-            range:{
-                y:25 
+            y:{
+                range:25,
+                startAt:false
             },
             ticker:{
                 x:3
