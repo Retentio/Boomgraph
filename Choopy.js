@@ -113,8 +113,8 @@ Raphael.el.andClose=function(){
         bb = set.getBBox(),
         w = Math.round(bb.width),
         h = Math.round(bb.height),
-        x = Math.round(bb.x) - r,
-        y = Math.round(bb.y) - r,
+        x = Math.round(bb.x)-r,
+        y = Math.round(bb.y)-r,
         gap = Math.min(h / 2, w / 2, 10),
         shapes = {
             top: "M{x},{y}h{w4},{w4},{w4},{w4}a{r},{r},0,0,1,{r},{r}v{h4},{h4},{h4},{h4}a{r},{r},0,0,1,-{r},{r}l-{right},0-{gap},{gap}-{gap}-{gap}-{left},0a{r},{r},0,0,1-{r}-{r}v-{h4}-{h4}-{h4}-{h4}a{r},{r},0,0,1,{r}-{r}z",
@@ -170,6 +170,7 @@ Raphael.el.andClose=function(){
             h: h,
             gap: gap
         }][pos[1] == "middle" ? 1 : (pos[1] == "top" || pos[1] == "left") * 2];
+    
         var dx = 0,
         dy = 0,
         out = this.path(fill(shapes[pos[0]], mask)).insertBefore(set);
@@ -205,70 +206,6 @@ Raphael.el.andClose=function(){
         return out;
     };
 })();
-/*!
- * g.Raphael 0.5 - Charting library, based on Raphaël
- *
- * Copyright (c) 2009 Dmitry Baranovskiy (http://g.raphaeljs.com)
- * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
- */
-//Raphael.el.popup=function(d,k,h,g){
-//    var c=this.paper||this[0].paper,f,j,b,e,a;
-//    if(!c){
-//        return
-//    }
-//    switch(this.type){
-//        case"text":case"circle":case"ellipse":
-//            b=true;
-//            break;
-//        default:
-//            b=false
-//    }
-//    d=d==null?"up":d;
-//    k=k||5;
-//    f=this.getBBox();
-//    h=typeof h=="number"?h:(b?f.x+f.width/2:f.x);
-//    g=typeof g=="number"?g:(b?f.y+f.height/2:f.y);
-//    e=Math.max(f.width/2-k,0);
-//    a=Math.max(f.height/2-k,0);
-//    this.translate(h-f.x-(b?f.width/2:0),g-f.y-(b?f.height/2:0));
-//    f=this.getBBox();
-//    var i={
-//        up:["M",h,g,"l",-k,-k,-e,0,"a",k,k,0,0,1,-k,-k,"l",0,-f.height,"a",k,k,0,0,1,k,-k,"l",k*2+e*2,0,"a",k,k,0,0,1,k,k,"l",0,f.height,"a",k,k,0,0,1,-k,k,"l",-e,0,"z"].join(","),
-//        down:["M",h,g,"l",k,k,e,0,"a",k,k,0,0,1,k,k,"l",0,f.height,"a",k,k,0,0,1,-k,k,"l",-(k*2+e*2),0,"a",k,k,0,0,1,-k,-k,"l",0,-f.height,"a",k,k,0,0,1,k,-k,"l",e,0,"z"].join(","),
-//        left:["M",h,g,"l",-k,k,0,a,"a",k,k,0,0,1,-k,k,"l",-f.width,0,"a",k,k,0,0,1,-k,-k,"l",0,-(k*2+a*2),"a",k,k,0,0,1,k,-k,"l",f.width,0,"a",k,k,0,0,1,k,k,"l",0,a,"z"].join(","),
-//        right:["M",h,g,"l",k,-k,0,-a,"a",k,k,0,0,1,k,-k,"l",f.width,0,"a",k,k,0,0,1,k,k,"l",0,k*2+a*2,"a",k,k,0,0,1,-k,k,"l",-f.width,0,"a",k,k,0,0,1,-k,-k,"l",0,-a,"z"].join(",")
-//    };
-//        
-//    j={
-//        up:{
-//            x:-!b*(f.width/2),
-//            y:-k*2-(b?f.height/2:f.height)
-//        },
-//        down:{
-//            x:-!b*(f.width/2),
-//            y:k*2+(b?f.height/2:f.height)
-//        },
-//        left:{
-//            x:-k*2-(b?f.width/2:f.width),
-//            y:-!b*(f.height/2)
-//        },
-//        right:{
-//            x:k*2+(b?f.width/2:f.width),
-//            y:-!b*(f.height/2)
-//        }
-//    }
-//    [d];
-//    this.translate(j.x,j.y);
-//    return c.path(i[d]).attr({
-//        fill:"#000",
-//        stroke:"none"
-//    }).insertBefore(this.node?this:this[0])
-//};
-//Raphael.fn.popup=function(a,f,d,b,c){
-//    var e=this.set();
-//    d=this.text(a,f,d)
-//    return e.push(d.popup(b,c),d)
-//};   
 
 var Choopy = (function(){
 
@@ -733,8 +670,17 @@ var Choopy = (function(){
         var ppp,textLabel;
     
         textLabel=this.draw.r.set()
-        textLabel.push(this.draw.r.text(60, 12, this.options.tooltip(this.data,x,y).title).attr(this.options.textes.tooltip.title))
-        textLabel.push(this.draw.r.text(60, 27, this.options.tooltip(this.data,x,y).sub).attr(this.options.textes.tooltip.sub))
+        textLabelF=this.draw.r.set()
+        var title=this.draw.r.text(160, 0, "").attr({'text':this.options.tooltip(this.data,x,y).title+'\n'+this.options.tooltip(this.data,x,y).sub}).attr(this.options.textes.tooltip.title)
+       
+//        var titleF=this.draw.r.text(160, 10, '').attr({'text':this.options.tooltip(this.data,x,y).title}).attr(this.options.textes.tooltip.title)
+//        var subtitleF=this.draw.r.text(160, 27, '').attr({'text':this.options.tooltip(this.data,x,y).sub}).attr(this.options.textes.tooltip.sub)
+
+        textLabel.push(title)
+//        textLabel.push(subtitle)
+//        textLabelF.push(titleF)
+//        textLabelF.push(subtitleF)
+        
            
         var side = "right";
             
@@ -746,13 +692,20 @@ var Choopy = (function(){
             side = "left";
             xPPP-=8
         }
-        ppp = this.draw.r.popup(xPPP,yPPP ,textLabel,side).attr({
+        ppp = this.draw.r.popup(xPPP,yPPP ,textLabel,side,true)
+        
+        tooltip=this.draw.r.path().attr({
+            path:ppp.path,
             fill: "#000", 
             stroke: "#666", 
             "stroke-width": 2, 
             "fill-opacity": .7
-        })
-        return this.draw.r.set(ppp,textLabel).hide()
+        }).translate(ppp.dx, ppp.dy)
+        textLabel.translate(ppp.dx, ppp.dy).toFront()
+//        textLabelF.translate(ppp.dx, ppp.dy).toFront()
+       
+        return this.draw.r.set(tooltip,textLabel).hide()
+//        return this.draw.r.set(ppp,textLabelF).hide()
         
     }
     
@@ -914,6 +867,11 @@ var Choopy = (function(){
             return(b?d<1.5?1:d<3?2:d<7?5:10:d<=1?1:d<=2?2:d<=5?5:10)*c
         }
     }
+    Choopy.prototype.fakeLabel=function(){return this.draw.r.set(
+        this.draw.r.text(160, 12, 'title').attr(this.options.textes.tooltip.title),
+        this.draw.r.text(160, 27, 'subtitle').attr(this.options.textes.tooltip.sub)
+    )}
+    
     Choopy.prototype.defaultOptions={
         data:'',
         container:'',
