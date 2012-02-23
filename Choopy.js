@@ -516,6 +516,12 @@ var Choopy = (function(){
             
             }
         }
+
+        if (minValue == maxValue){
+          var uniqValue = minValue;
+          minValue = uniqValue / 2;
+          maxValue += minValue;
+        }
     
         var yMin=minValue,
         yMax=maxValue,
