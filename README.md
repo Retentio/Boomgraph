@@ -39,7 +39,7 @@ Improve unit tests (refacto and upgrade coverage), add pie charts, increase cust
 Example
 -------
 
-Check the [project page](http://retentio.github.com/boomgraph)
+Check the [project page](http://retentio.github.com/Boomgraph/)
 
 How to run unit tests
 ---------------------
