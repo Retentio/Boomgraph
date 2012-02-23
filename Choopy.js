@@ -1,14 +1,28 @@
-Raphael.fn.drawGrid = function (x, y, w, h, wv,scale,numTickerY, color) {
+Raphael.fn.drawGrid = function (x, y, w, h, wv,scale,numTickerY,drawbox, color) {
     color = color || "#000";
-    //    var path = ["M", Math.round(x) + .5, Math.round(y) + .5, "L", Math.round(x + w) + .5, Math.round(y) + .5, Math.round(x + w) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y) + .5],
-    var path=[]
-    minValue=Math.round(scale.y.minValue)
-    maxValue=Math.round(scale.y.maxValue)
-    rowHeight = (h) / (numTickerY);
+    if(drawbox){
+        var path = ["M", Math.round(x) + .5, Math.round(y) + .5, "L", Math.round(x + w) + .5, Math.round(y) + .5, Math.round(x + w) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y) + .5]
+    }else{
+        var path=[]
+    }  
+    var minValue=Math.round(scale.y.minValue),
+    maxValue=Math.round(scale.y.maxValue),
+    rowHeight = (h) / (numTickerY),
     step=(maxValue-minValue)/numTickerY
  
     for (var i = 0; i <= numTickerY; i++) {
-        path = path.concat(["M", Math.round(x) + .5, Math.round(y + i * rowHeight) + .5, "H", Math.round(x + w) + .5]);
+        
+        if(i<numTickerY){
+            for(var j = 0,jj=w/3;j<jj;j++){
+                if(j%2==0 ){
+                    path = path.concat(["M", x + j*3, Math.round(y + i * rowHeight) + .5, "l", 3, 0]);
+                }
+            }
+        }else{
+            path = path.concat(["M", x, Math.round(y + i * rowHeight) + .5, "l", w, 0]);
+        }
+        
+        
         var yL = Math.round(Math.round(y + i * rowHeight))
         var t = this.text(15,yL, Math.round((step*(numTickerY-i)+minValue)*100)/100).attr({
             font: '12px Helvetica, Arial', 
@@ -16,10 +30,10 @@ Raphael.fn.drawGrid = function (x, y, w, h, wv,scale,numTickerY, color) {
         }).toBack();
     }
     
-    
 
     return this.path(path.join(",")).attr({
-        stroke: color
+        stroke: color,
+        opacity:0.3
     });
 };
 
@@ -522,9 +536,10 @@ var Choopy = (function(){
         wv=this.data.countSerie*this.data.labels.x.length, 
         numTickerY=this.options.grid.y.range,
         scale=this.draw.coord.scale,
-        color=this.options.color.grid
+        color=this.options.color.grid,
+        drawbox=this.options.grid.drawbox
         
-        this.draw.grid=this.draw.r.drawGrid(x, y, w, h, wv,scale,numTickerY, color);
+        this.draw.grid=this.draw.r.drawGrid(x, y, w, h, wv,scale,numTickerY,drawbox, color);
            
     }
 
@@ -888,7 +903,7 @@ var Choopy = (function(){
                 self.draw.tooltips[this.id].show().toFront()
             }
             if(this.type=='rect'){
-                this.attr('opacity',0.6)
+                this.attr('fill-opacity',0.7)
                 self.draw.tooltips[this.id].show().toFront()
             }
         },function(){
@@ -898,7 +913,7 @@ var Choopy = (function(){
                 self.draw.tooltips[this.id].hide()
             }
             if(this.type=='rect'){
-                this.attr('opacity',1)
+                this.attr('fill-opacity',1)
                 self.draw.tooltips[this.id].hide()
             }
         })
@@ -969,7 +984,8 @@ var Choopy = (function(){
             },
             ticker:{
                 x:false
-            }
+            },
+            drawbox:false
         },
         textes:{
             axis:{
