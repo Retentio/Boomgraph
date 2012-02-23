@@ -389,7 +389,7 @@ var Choopy = (function(){
                     if(tr.getElementsByTagName('td')){
                         var tds=tr.getElementsByTagName('td')
                         for(var j=0,jj=tds.length;j<jj;j++){
-                            tdsValues.push(this.utils.trim(tds[j].textContent))
+                            tdsValues.push(parseFloat(this.utils.trim(tds[j].textContent)))
                         }
                     }
                     values.push(tdsValues)
@@ -519,10 +519,12 @@ var Choopy = (function(){
 
         if (minValue == maxValue){
           var uniqValue = minValue;
-          minValue = uniqValue / 2;
+          //add a 'niceNumber' method to get a better interval around the uniq value
+          minValue = parseFloat(uniqValue / 2);
           maxValue += minValue;
         }
-    
+        
+        
         var yMin=minValue,
         yMax=maxValue,
         yStep=(maxValue-minValue)/this.options.grid.y.range;
