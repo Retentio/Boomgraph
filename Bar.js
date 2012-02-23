@@ -1,4 +1,4 @@
-var Column = function Column(options){
+var Bar = function Bar(options){
     
     var choopy=new Choopy(options)
     

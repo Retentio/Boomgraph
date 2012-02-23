@@ -1,4 +1,4 @@
-var Sparckbar = function Sparckbar(options){
+var Sparkarea = function Sparkarea(options){
     
     var choopy=new Choopy(options)
     
@@ -29,7 +29,6 @@ var Sparckbar = function Sparckbar(options){
             bottom:0,
             left:0
         }})
-    
     choopy.initDraw()
     var serie;
     var howToScale=function(i,j){
@@ -42,10 +41,11 @@ var Sparckbar = function Sparckbar(options){
     for (var i=0,ii=choopy.data.countSerie; i<ii ; i++){
         //we pick a color form the options
         var currentColor=choopy.options.color.serie[i%choopy.options.color.serie.length]
-        serie=choopy.drawColumns(i,currentColor,howToScale)
-        serie.toFront()
+        serie=choopy.drawLine(i,currentColor,howToScale)
+        serie.plots.toFront()
         choopy.draw.sets.series.push(serie.plots)
         choopy.draw.sets.pathes.push(serie.lines)
     }
+    choopy.fillPathes()
     
 }

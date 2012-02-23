@@ -1,4 +1,4 @@
-var Sparckarea = function Sparckarea(options){
+var Sparkline = function Sparkline(options){
     
     var choopy=new Choopy(options)
     
@@ -46,6 +46,5 @@ var Sparckarea = function Sparckarea(options){
         choopy.draw.sets.series.push(serie.plots)
         choopy.draw.sets.pathes.push(serie.lines)
     }
-    choopy.fillPathes()
     
 }

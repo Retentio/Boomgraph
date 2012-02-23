@@ -7,15 +7,17 @@ and open the template in the editor.
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
+
         <script src="Raphael.js"></script>
         <script src="Choopy.js"></script>
         <script src="CyclePlot.js"></script>
         <script src="Line.js"></script>
         <script src="Area.js"></script>
-        <script src="Column.js"></script>
-        <script src="Sparckline.js"></script>
-        <script src="Sparckarea.js"></script>
-        <script src="Sparckbar.js"></script>
+        <script src="Bar.js"></script>
+        <script src="Sparkline.js"></script>
+        <script src="Sparkarea.js"></script>
+        <script src="Sparkbar.js"></script>
         <script>
             window.onload = function () {
                 options={
@@ -39,7 +41,7 @@ and open the template in the editor.
                     tooltip:function(data,x,y){
                         title='Signup on '+data.raws[0][y+1];
                         sub=data.series[x].data[y]+'% still active in '+data.labels.x[x];
-                      return {title:title,sub:sub}  
+                        return {title:title,sub:sub}  
                     }
                 }
                     
@@ -47,12 +49,12 @@ and open the template in the editor.
                 e=new CyclePlot(options)
                 options.container='titi1'
                 options.tooltip=function(data,x,y){
-                        title='Signup on '+data.series[x].name;
-                        sub=data.series[x].data[y]+'% still active in '+data.labels.x[x];
-                      return {title:title,sub:sub}  
-                    }
+                    title='Signup on '+data.series[x].name;
+                    sub=data.series[x].data[y]+'% still active in '+data.labels.x[x];
+                    return {title:title,sub:sub}  
+                }
                 options.grid.y.startAt=0;
-                e=new Column(options)
+                e=new Bar(options)
                 options.container='titi2'
                 e=new Line(options)
                 options.container='titi3'
@@ -63,36 +65,36 @@ and open the template in the editor.
                     width:150,
                     height:40,
                     data:[{
-                         name: 'USA',
-                         data: [null, null, null, null, null, 6 , 11, 32, 110, 235, 369, 640, 
-                            1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468, 20434, 24126, 
-                            27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342, 26662, 
-                            26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 24605, 
-                            24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586, 
-                            22380, 21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950, 
-                            10871, 10824, 10577, 10527, 10475, 10421, 10358, 10295, 10104 ]
-                      }],
-                    container:'sparckline'
+                            name: 'USA',
+                            data: [null, null, null, null, null, 6 , 11, 32, 110, 235, 369, 640, 
+                                1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468, 20434, 24126, 
+                                27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342, 26662, 
+                                26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 24605, 
+                                24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586, 
+                                22380, 21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950, 
+                                10871, 10824, 10577, 10527, 10475, 10421, 10358, 10295, 10104 ]
+                        }],
+                    container:'sparkline'
                    
                 }
                     
     
-                f=new Sparckline(options1)
+                f=new Sparkline(options1)
                 options1={
                     
                     width:150,
                     height:40,
                     data:[{
-                         name: 'USA',
-                         data: [ 640, 
-                            1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468, 20434, 24126, 
-                             24605, 
-                            24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586, 
-                            22380, 21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950, 
-                            10871, 10824, 10577, 10527,27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342, 26662, 
-                            26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 10475, 10421, 10358, 10295, 10104 ]
-                      }],
-                    container:'sparckarea',
+                            name: 'USA',
+                            data: [ 640, 
+                                1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468, 20434, 24126, 
+                                24605, 
+                                24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586, 
+                                22380, 21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950, 
+                                10871, 10824, 10577, 10527,27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342, 26662, 
+                                26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 10475, 10421, 10358, 10295, 10104 ]
+                        }],
+                    container:'sparkarea',
                     color :{
                         serie:['#86B00E','#7E0EB0','#116300','#064D65','#653604']
                     }, 
@@ -103,18 +105,18 @@ and open the template in the editor.
                     }
                    
                 }
-                f=new Sparckarea(options1)
-                 options1={
+                f=new Sparkarea(options1)
+                options1={
                     
-                    width:150,
-                    height:40,
+                    width:500,
+                    height:150,
                     data:[{
-                         name: 'USA',
-                         data: [ 25579, 25722, 24826, 24605, 
-                            24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586, 
-                            22380, 21004, 17287, 14747, 13076, 12555, 12144 ]
-                      }],
-                    container:'sparckbar',
+                            name: 'USA',
+                            data: [ 25579, 25722, 24826, 24605, 
+                                24304, 23464, 23708, -24099, 24357, 24237, 24401, 24344, 23586, 
+                                22380, 21004, 17287, 14747, 13076, 12555, 12144 ]
+                        }],
+                    container:'sparkbar',
                     color :{
                         serie:['#B00E86','#86B00E','#7E0EB0','#116300','#064D65','#653604']
                     }, 
@@ -125,13 +127,13 @@ and open the template in the editor.
                     }
                    
                 }
-                f=new Sparckbar(options1)
+                f=new Sparkbar(options1)
             }
 
         </script>
     </head>
-    <body style="background-color: rgb(68, 68, 68);">
-<table id="tata" style="display:none">
+    <body>
+        <table id="tata" style="display:none">
             <thead>
                 <tr>
                     <th>Month of signup</th>
@@ -239,7 +241,7 @@ and open the template in the editor.
                     <th>
                         Month 7
                     </th>
-                    
+
                 </tr>
             </thead>
             <tbody>
@@ -306,14 +308,14 @@ and open the template in the editor.
             </tbody>
         </table>
 
-        <div id="sparckline"></div>
-        <div id="sparckarea"></div>
-        <div id="sparckbar"></div>
+        <div id="sparkline"></div>
+        <div id="sparkarea"></div>
+        <div id="sparkbar"></div>
         <div id="titi"></div>
         <div id="titi1"></div>
         <div id="titi2"></div>
         <div id="titi3"></div>
-        
-        
+
+
     </body>
 </html>
