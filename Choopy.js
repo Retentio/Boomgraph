@@ -1,7 +1,20 @@
+// ┌────────────────────────────────────────────────────────────────────┐ \\
+// │ Boomgraph - Choopy.js                                              │ \\
+// ├────────────────────────────────────────────────────────────────────┤ \\
+// │ Copyright © 2012 Antoine Guiral (http://twitter.com/antoineguiral) │ \\
+// │ Copyright © 2012 Retent.io (http://retent.io)                      │ \\
+// ├────────────────────────────────────────────────────────────────────┤ \\
+// │ Licensed under the Apache License, Version 2.0 (the "License");    │ \\
+// | you may not use this file except in compliance with the License.   │ \\
+// | You may obtain a copy of the License at                            │ \\
+// |                                                                    │ \\
+// | http://www.apache.org/licenses/LICENSE-2.0                         │ \\
+// └────────────────────────────────────────────────────────────────────┘ \\
+
 Raphael.fn.drawGrid = function (x, y, w, h, wv,scale,numTickerY,drawbox, color) {
     color = color || "#000";
     if(drawbox){
-        var path = ["M", Math.round(x) + .5, Math.round(y) + .5, "L", Math.round(x + w) + .5, Math.round(y) + .5, Math.round(x + w) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y) + .5]
+        var path = ["M", Math.round(x) + .5, Math.round(y) + .5, "L", Math.round(x + w-2) + .5, Math.round(y) + .5, Math.round(x + w-2) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y) + .5]
     }else{
         var path=[]
     }  

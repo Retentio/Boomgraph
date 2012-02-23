@@ -1,222 +1,431 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
+
 <!DOCTYPE html>
-<html>
-    <head>
-        <title></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Boomgraph</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-        <script src="Raphael.js"></script>
-        <script src="Choopy.js"></script>
-        <script src="CyclePlot.js"></script>
-        <script src="Line.js"></script>
-        <script src="Area.js"></script>
-        <script src="Bar.js"></script>
-        <script src="Sparkline.js"></script>
-        <script src="Sparkarea.js"></script>
-        <script src="Sparkbar.js"></script>
-        <script>
-            window.onload = function () {
-                options={
-                    data:'toto',
-                    container:'titi'
-                    
-                }
-                options={
-                    data:'toto',
-                    container:'titi',
-                    width:400,
-                    height:300,
-                    grid:{
-                        y:{
-                            range:5 
-                        },
-                        ticker:{
-                            x:1
-                        }
-                    },
-                    tooltip:function(data,x,y){
-                        title='Signup on '+data.raws[0][y+1];
-                        sub=data.series[x].data[y]+'% still active in '+data.labels.x[x];
-                        return {title:title,sub:sub}  
-                    }
-                }
-                    
-    
-                e=new CyclePlot(options)
-                options.container='titi1'
-                options.tooltip=function(data,x,y){
-                    title='Signup on '+data.series[x].name;
-                    sub=data.series[x].data[y]+'% still active in '+data.labels.x[x];
-                    return {title:title,sub:sub}  
-                }
-                options.grid.y.startAt=0;
-                e=new Bar(options)
-                options.container='titi2'
-                e=new Line(options)
-                options.container='titi3'
-                e=new Area(options)
+    <!-- Le styles -->
+    <link href="doc/css/bootstrap.css" rel="stylesheet">
+    <link href="doc/css/responsive.css" rel="stylesheet">
+    <link href="vendor/docs.css" rel="stylesheet">
+    <link href="doc/google-code-prettify/prettify.css" rel="stylesheet">
 
-                options1={
-                    
-                    width:150,
-                    height:40,
-                    data:[{
-                            name: 'USA',
-                            data: [null, null, null, null, null, 6 , 11, 32, 110, 235, 369, 640, 
-                                1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468, 20434, 24126, 
-                                27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342, 26662, 
-                                26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 24605, 
-                                24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586, 
-                                22380, 21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950, 
-                                10871, 10824, 10577, 10527, 10475, 10421, 10358, 10295, 10104 ]
-                        }],
-                    container:'sparkline'
-                   
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body data-spy="scroll" data-target=".subnav" data-offset="50">
+
+
+ 
+    <div class="container">
+
+      <!-- Masthead
+      ================================================== -->
+      <header class="jumbotron subhead" id="overview">
+        <h1>Boomgraph</h1>
+        <p class="lead">A chart library based on <a href="http://raphaeljs.com/" target="_blank">Raphael</a>.
+        <div class="subnav">
+          <ul class="nav nav-pills">
+            <li><a href="#concept">Concept</a></li>
+            <li><a href="#choopy">Choopy</a></li>
+            <li><a href="#options">Options</a></li>
+            <li><a href="#line">Line</a></li>
+            <li><a href="#area">Area</a></li>
+            <li><a href="#bar">Bar</a></li>
+            <li><a href="#sparkline">Sparkline</a></li>
+            <li><a href="#sparkarea">Sparkarea</a></li>
+            <li><a href="#sparkbar">Sparkbar</a></li>
+          </ul>
+        </div>
+      </header>
+
+
+
+    <!-- Concept
+    ================================================== -->
+    <section id="concept">
+      <div class="page-header">
+        <h1>Concept</h1>
+      </div>
+      <div class="row">
+        <div class="span3 columns">
+          <h3>About Boomgraph.js</h3>
+          <p></p>
+        </div>
+        <div class="span9 columns">
+          <h2>How it works</h2>
+          <p>Boomgraph is based on Raphael. Since Raphael is "just" to handle SVG easily, Boomgraph use a core object called Choopy.</p>
+          <p>Choopy is the common factor between each chart. It exposes primitives to parse data, draw plots/line/area/bar/grid, manage labels and so on.</p>
+          <p>Each chart provided by Boomgraph is on top of these primitives. They allow you to extend easily Boomgraph and create the chart you dream of!</p>
+         
+          
+          <div class="alert alert-info">
+            <strong>Heads up!</strong> You need the latest version of Raphael (2.0.2)
+          </div>
+         
+          
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- Choopy
+    ================================================== -->
+    <section id="choopy">
+      <div class="page-header">
+        <h1>Choopy <small>Choopy.js</small></h1>
+      </div>
+      <div class="row">
+        <div class="span3 columns">
+          <h3>About Choopy</h3>
+          <p>The core object behind all Boomgraph charts.</p>
+          <a href="Choopy.js" target="_blank" class="btn">Download file</a>
+        </div>
+        <div class="span9 columns">
+          <h2>Details</h2>
+          <p>Mettre du blabla sur choopy, why not le lien vers les tests, etc.</p>
+          
+          <h3>Primitives</h3>
+          <h4>.parse()</h4>
+          <p>Parse the data given on <code>options.data</code>. It can be an array of series, or an id related to an html table.</p>
+<pre class="prettyprint linenums">
+Choopy.parse()
+</pre>
+        </div>
+      </div>
+    </section>
+
+
+
+   <!-- Options
+    ================================================== -->
+    <section id="scrollspy">
+      <div class="page-header">
+        <h1>Options</h1>
+      </div>
+      <div class="row">
+        <div class="span3 columns">
+          <h3>Customize your charts!</h3>
+          <p>Almost everything is customizable to fit your needs.</p>
+        </div>
+        <div class="span9 columns">
+          <h2>Details</h2>
+          <p>This is how you can customize your graph.</p>
+          <h3>Default options</h3>
+          <pre class="prettyprint linenums">
+defaultOptions={
+        data:'',
+        container:'',
+        width:600,
+        height:400,
+        offset:{        
+            top:20,
+            right:20,
+            bottom:20,
+            left:20
+        },
+        gutter:{
+            top:30,
+            right:30,
+            bottom:30,
+            left:30
+        },
+        grid:{
+            y:{
+                range:10,
+                startAt:false
+            },
+            ticker:{
+                x:false
+            },
+            drawbox:false
+        },
+        textes:{
+            axis:{
+                font: '10px Helvetica, Arial', 
+                fill: "#333"
+            },
+            tooltip:{
+                title:{
+                    font: '12px Helvetica, Arial', 
+                    fill: "#fff"
+                },
+                sub:{
+                    font: '10px Helvetica, Arial', 
+                    fill: "#fff"
                 }
-                    
-    
-                f=new Sparkline(options1)
-                options1={
-                    
-                    width:150,
-                    height:40,
-                    data:[{
-                            name: 'USA',
-                            data: [ 640, 
-                                1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468, 20434, 24126, 
-                                24605, 
-                                24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586, 
-                                22380, 21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950, 
-                                10871, 10824, 10577, 10527,27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342, 26662, 
-                                26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 10475, 10421, 10358, 10295, 10104 ]
-                        }],
-                    container:'sparkarea',
-                    color :{
-                        serie:['#86B00E','#7E0EB0','#116300','#064D65','#653604']
-                    }, 
-                    grid:{
-                        y:{
-                            startAt:0 
-                        }
-                    }
-                   
-                }
-                f=new Sparkarea(options1)
-                options1={
-                    
-                    width:500,
-                    height:150,
-                    data:[{
-                            name: 'USA',
-                            data: [ 25579, 25722, 24826, 24605, 
-                                24304, 23464, 23708, -24099, 24357, 24237, 24401, 24344, 23586, 
-                                22380, 21004, 17287, 14747, 13076, 12555, 12144 ]
-                        }],
-                    container:'sparkbar',
-                    color :{
-                        serie:['#B00E86','#86B00E','#7E0EB0','#116300','#064D65','#653604']
-                    }, 
-                    grid:{
-                        y:{
-                            startAt:0 
-                        }
-                    }
-                   
-                }
-                f=new Sparkbar(options1)
             }
+        },
+        tooltip:function(data,x,y){
+            return {
+                title:data.series[x].name,
+                sub:data.series[x].data[y]
+            }  
+        },
+        color :{
+            serie:['#1589B2','#A2CC06','#CC33CC','#FF9933','#4FAC24','#00CCCC','#FF0066'],
+            transverse:"green",
+            dot:{
+                fill:"#EEE"
+            },
+            grid:'#333'
+        },
+        graph:{
+            curve:0,
+            dot:{
+                normal:4,
+                hover:6
+            },
+            line:{
+                strokeWidth:4
+            }
+        }
+    }
+          </pre>
+        </div>
+      </div>
+    </section>
 
-        </script>
-    </head>
-    <body>
-        <table id="tata" style="display:none">
-            <thead>
-                <tr>
-                    <th>Month of signup</th>
-                    <th>
-                        Month 1
-                    </th>
-                    <th>
-                        Month 2
-                    </th>
-                    <th>
-                        Month 3
-                    </th>
-                    <th>
-                        Month 4
-                    </th>
-                    <th>
-                        Month 5
-                    </th>
-                    <th>
-                        Month 6
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>08/2011</td>
-                    <td>26</td>
-                    <td>23</td>
-                    <td>21</td>
-                    <td>17</td>
-                    <td>15</td>
-                    <td>16</td>
-                </tr>
-                <tr>
-                    <td>09/2011</td>
-                    <td>33</td>
-                    <td>28</td>
-                    <td>24</td>
-                    <td>22</td>
-                    <td>18</td>
-                    <td>18</td>
-                </tr>
-                <tr>
-                    <td>10/2011</td>
-                    <td>28</td>
-                    <td>24</td>
-                    <td>23</td>
-                    <td>19</td>
-                    <td>19</td>
-                    <td>19</td>
-                </tr>
-                <tr>
-                    <td>11/2011</td>
-                    <td>31</td>
-                    <td>27</td>
-                    <td>-4</td>
-                    <td>23</td>
-                    <td>23</td>
-                    <td>23</td>
-                </tr>
-                <tr>
-                    <td>12/2011</td>
-                    <td>35</td>
-                    <td>32</td>
-                    <td>32</td>
-                    <td>32</td>
-                    <td>32</td>
-                    <td>32</td>
-                </tr>
-                <tr>
-                    <td>01/2012</td>
-                    <td>38</td>
-                    <td>38</td>
-                    <td>38</td>
-                    <td>38</td>
-                    <td>38</td>
-                    <td>38</td>
-                </tr>
-            </tbody>
-        </table>
 
-        <div id="tete"></div>
-        <table id="toto">
+
+    <!-- Line
+    ================================================== -->
+    <section id="line">
+      <div class="page-header">
+        <h1>Line chart <small>Line.js</small></h1>
+      </div>
+      <div class="row">
+        <div class="span3 columns">
+          <p>Create a line chart with one or more series of data.</p>
+          <a href="Line.js" target="_blank" class="btn">Download file</a>
+        </div>
+          <div class="span9 columns">
+              <h2>Example</h2>
+              <div id="boomgraph-container-line">
+
+              </div>
+             
+
+          <hr>
+          <h2>Using Line.js</h2>
+          <p>Define at least your data and a container:</p>
+          <pre class="prettyprint linenums">var options={
+                data:'mySweetData' //an id or an array,
+                container:'putMyChartHere' // an id
+          }</pre>
+          <h3>Call Line.js</h3>
+          <p>Just create an instance of <code>Line</code> with your options</p>
+<pre class="prettyprint linenums">
+myLineChart = new Line(options);
+</pre>
+         
+       </div>
+      </div>
+    </section>
+    
+    
+    <!-- Area
+    ================================================== -->
+    <section id="area">
+      <div class="page-header">
+        <h1>Area chart <small>Area.js</small></h1>
+      </div>
+      <div class="row">
+        <div class="span3 columns">
+          <p>Create an area chart with one or more series of data.</p>
+          <a href="Area.js" target="_blank" class="btn">Download file</a>
+        </div>
+          <div class="span9 columns">
+              <h2>Example</h2>
+              <div id="boomgraph-container-area">
+
+              </div>
+
+          <hr>
+          <h2>Using Area.js</h2>
+          <p>Define at least your data and a container:</p>
+          <pre class="prettyprint linenums">var options={
+                data:'mySweetData' //an id or an array,
+                container:'putMyChartHere' // an id
+          }</pre>
+          <h3>Call Area.js</h3>
+          <p>Just create an instance of <code>Area</code> with your options</p>
+<pre class="prettyprint linenums">
+myAreaChart = new Area(options);
+</pre>
+         
+       </div>
+      </div>
+    </section>
+    
+    
+    <!-- Bar
+    ================================================== -->
+    <section id="bar">
+      <div class="page-header">
+        <h1>Bar chart <small>Bar.js</small></h1>
+      </div>
+      <div class="row">
+        <div class="span3 columns">
+          <p>Create a vertical bar chart with one or more series of data.</p>
+          <a href="Area.js" target="_blank" class="btn">Download file</a>
+        </div>
+          <div class="span9 columns">
+              <h2>Example</h2>
+              <div id="boomgraph-container-bar">
+
+              </div>
+
+          <hr>
+          <h2>Using Bar.js</h2>
+          <p>Define at least your data and a container:</p>
+          <pre class="prettyprint linenums">var options={
+                data:'mySweetData' //an id or an array,
+                container:'putMyChartHere' // an id
+          }</pre>
+          <h3>Call Bar.js</h3>
+          <p>Just create an instance of <code>Bar</code> with your options</p>
+<pre class="prettyprint linenums">
+myBarChart = new Bar(options);
+</pre>
+         
+       </div>
+      </div>
+    </section>
+    
+    <!-- Sparkline
+    ================================================== -->
+    <section id="sparkline">
+      <div class="page-header">
+        <h1>Sparkline <small>Sparkline.js</small></h1>
+      </div>
+      <div class="row">
+        <div class="span3 columns">
+          <p>Create a sparkline with one serie.</p>
+          <a href="Sparkline.js" target="_blank" class="btn">Download file</a>
+        </div>
+          <div class="span9 columns">
+              <h2>Example</h2>
+              <div id="boomgraph-container-sparkline">
+
+              </div>
+
+          <hr>
+          <h2>Using Sparkline.js</h2>
+          <p>Define at least your data and a container:</p>
+          <pre class="prettyprint linenums">var options={
+                data:[{name:'mySerie',data:[1,2,3,4,5,6,5,4,8,5,4,8,5]}], //an id or an array
+                container:'putMyChartHere', // an id
+                width:200,
+                height:50
+          }</pre>
+          <h3>Call Sparkline.js</h3>
+          <p>Just create an instance of <code>Sparkline</code> with your options</p>
+<pre class="prettyprint linenums">
+mySparkline = new Sparkline(options);
+</pre>
+         
+       </div>
+      </div>
+    </section>
+    
+    <!-- Sparkarea
+    ================================================== -->
+    <section id="sparkarea">
+      <div class="page-header">
+        <h1>Sparkarea <small>Sparkarea.js</small></h1>
+      </div>
+      <div class="row">
+        <div class="span3 columns">
+          <p>Create a sparkarea with one serie.</p>
+          <a href="Sparkarea.js" target="_blank" class="btn">Download file</a>
+        </div>
+          <div class="span9 columns">
+              <h2>Example</h2>
+              <div id="boomgraph-container-sparkarea">
+
+              </div>
+
+          <hr>
+          <h2>Using Sparkarea.js</h2>
+          <p>Define at least your data and a container:</p>
+          <pre class="prettyprint linenums">var options={
+                data:[{name:'mySerie',data:[1,2,3,4,5,6,5,4,8,5,4,8,5]}], //an id or an array
+                container:'putMyChartHere', // an id
+                width:200,
+                height:50
+          }</pre>
+          <h3>Call Sparkarea.js</h3>
+          <p>Just create an instance of <code>Sparkarea</code> with your options</p>
+<pre class="prettyprint linenums">
+mySparkarea = new Sparkarea(options);
+</pre>
+         
+       </div>
+      </div>
+    </section>
+    
+    <!-- Sparkbar
+    ================================================== -->
+    <section id="sparkbar">
+      <div class="page-header">
+        <h1>Sparkbar <small>Sparkbar.js</small></h1>
+      </div>
+      <div class="row">
+        <div class="span3 columns">
+          <p>Create a sparkbar with one serie.</p>
+          <a href="Sparkline.js" target="_blank" class="btn">Download file</a>
+        </div>
+          <div class="span9 columns">
+              <h2>Example</h2>
+              <div id="boomgraph-container-sparkbar">
+
+              </div>
+
+          <hr>
+          <h2>Using Sparkbar.js</h2>
+          <p>Define at least your data and a container:</p>
+          <pre class="prettyprint linenums">var options={
+                data:[{name:'mySerie',data:[1,2,3,4,5,6,5,4,8,5,4,8,5]}], //an id or an array
+                container:'putMyChartHere', // an id
+                width:200,
+                height:50
+          }</pre>
+          <h3>Call Sparkbar.js</h3>
+          <p>Just create an instance of <code>Sparkbar</code> with your options</p>
+<pre class="prettyprint linenums">
+mySparkbar = new Sparkbar(options);
+</pre>
+         
+       </div>
+      </div>
+    </section>
+
+
+     <!-- Footer
+      ================================================== -->
+      <footer class="footer">
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>Designed and built at <a href="http://retent.io/" target="_blank">Retentio</a> (<a href="http://twitter.com/retentio" target="_blank">@retentio</a>) by <a href="http://twitter.com/antoineguiral" target="_blank">@antoineguiral</a>.</p>
+        <p>Code licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+      </footer>
+
+    </div><!-- /container -->
+
+    
+    <!-- Fixture
+    ================================================== -->
+    <div style="display:none">
+           <table id="fixture">
             <thead>
                 <tr>
                     <th>Month of signup</th>
@@ -307,15 +516,92 @@ and open the template in the editor.
                 </tr>
             </tbody>
         </table>
+    </div>
+    
+    
 
-        <div id="sparkline"></div>
-        <div id="sparkarea"></div>
-        <div id="sparkbar"></div>
-        <div id="titi"></div>
-        <div id="titi1"></div>
-        <div id="titi2"></div>
-        <div id="titi3"></div>
+    <!-- Le javascript
+    ================================================== -->
+    
+    <script>
+        window.onload = function () {
+            options={
+                data:'fixture',
+                container:'boomgraph-container-line',
+                width:700,
+                gutter:{
+                    right:0
+                }
+            }
+            new Line(options);
+            options={
+                data:'fixture',
+                container:'boomgraph-container-area',
+                width:700,
+                gutter:{
+                    right:0
+                }
+            }
+            new Area(options);
+            options={
+                data:'fixture',
+                container:'boomgraph-container-bar',
+                width:700,
+                gutter:{
+                    right:0
+                },
+                grid:{
+                    drawbox:true
+                }
+            }
+            new Bar(options);
+            
+            options={
+                data:[{name:'mySerie',data:[1,2,0,1,3,4,5,6,5,4,8,5,4,8,5]}],
+                container:'boomgraph-container-sparkline',
+                width:200,
+                height:50
+            }
+            new Sparkline(options)
+            
+            options={
+                data:[{name:'mySerie',data:[1,2,0,1,3,4,5,6,5,4,8,5,4,8,5]}],
+                container:'boomgraph-container-sparkbar',
+                width:200,
+                height:50
+            }
+            new Sparkbar(options)
+            
+            options={
+                data:[{name:'mySerie',data:[1,2,0,1,3,4,5,6,5,4,8,5,4,8,5]}],
+                container:'boomgraph-container-sparkarea',
+                width:200,
+                height:50
+            }
+            new Sparkarea(options)
+        }
+    </script>
+    
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="doc/google-code-prettify/prettify.js"></script>
+    <script src="doc/js/bootstrap-transition.js"></script>
+    <script src="doc/js/bootstrap-dropdown.js"></script>
+    <script src="doc/js/bootstrap-scrollspy.js"></script>
+    <script src="doc/js/bootstrap-tab.js"></script>
+    <script src="doc/js/bootstrap-collapse.js"></script>
 
-
-    </body>
+    
+    <script src="doc/js/doc.js"></script>
+    <script src="vendor/Raphael.js"></script>
+    <script src="Choopy.js"></script>
+    <script src="CyclePlot.js"></script>
+    <script src="Line.js"></script>
+    <script src="Area.js"></script>
+    <script src="Bar.js"></script>
+    <script src="Sparkline.js"></script>
+    <script src="Sparkarea.js"></script>
+    <script src="Sparkbar.js"></script>
+   
+  </body>
 </html>
