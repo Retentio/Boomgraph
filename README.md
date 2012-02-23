@@ -23,7 +23,7 @@ Features
 * SparkLine.
 * SparkBar.
 * SparkArea.
-* Choopy to create your graph easly.
+* Choopy to create your graph easily.
 
 Installation
 ------------
@@ -34,7 +34,7 @@ If you want to use it right now (at your own risk), just take the source :-)
 Roadmap
 -------
 
-Improve unit tests (refacto and upgrade coverage), add pie charts, increase customisation, better management of Y-scale
+Improve unit tests (refacto and upgrade coverage), add pie charts, increase customization, better management of Y-scale
 
 Example
 -------
@@ -44,6 +44,6 @@ Check the [project page](http://retentio.github.com/boomgraph)
 How to run unit tests
 ---------------------
 
-Boomgo is unit tested with [QUnit](http://docs.jquery.com/QUnit).
+Boomgraph is unit tested with [QUnit](http://docs.jquery.com/QUnit).
 
 To run the complete test suite, open /test/index.html in a browser.
