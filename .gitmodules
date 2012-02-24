@@ -1,0 +1,3 @@
+[submodule "Makejs"]
+	path = Makejs
+	url = git@github.com:Retentio/Makejs.git
