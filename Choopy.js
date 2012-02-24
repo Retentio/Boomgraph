@@ -17,8 +17,8 @@ Raphael.fn.drawGrid = function (x, y, w, h, wv,scale,numTickerY,drawbox, color) 
     }else{
         var path=[]
     }  
-    var minValue=Math.round(scale.y.minValue),
-    maxValue=Math.round(scale.y.maxValue),
+    var minValue=scale.y.minValue,
+    maxValue=scale.y.maxValue,
     rowHeight = (h) / (numTickerY),
     step=(maxValue-minValue)/numTickerY
  
@@ -389,7 +389,7 @@ var Choopy = (function(){
                     if(tr.getElementsByTagName('td')){
                         var tds=tr.getElementsByTagName('td')
                         for(var j=0,jj=tds.length;j<jj;j++){
-                            tdsValues.push(parseFloat(this.utils.trim(tds[j].textContent)))
+                            tdsValues.push(this.utils.trim(tds[j].textContent))
                         }
                     }
                     values.push(tdsValues)
@@ -440,7 +440,7 @@ var Choopy = (function(){
                     this.data.series[0].name=values[0][j]
                
                 }else{
-                    this.data.series[0].data.push(values[0][j])
+                    this.data.series[0].data.push(parseFloat(values[0][j]))
                 }
             }
             this.data.longestSerie=values[0].length-1
@@ -475,7 +475,7 @@ var Choopy = (function(){
                             this.data.series[i-1].name=values[i][j]
                
                         }else{
-                            this.data.series[i-1].data.push(values[i][j])
+                            this.data.series[i-1].data.push(parseFloat(values[i][j]))
                         }
                         if(this.data.longestSerie<(jj-1)){
                             this.data.longestSerie=jj-1
@@ -517,31 +517,37 @@ var Choopy = (function(){
             }
         }
 
-        if (minValue == maxValue){
-          var uniqValue = minValue;
-          //add a 'niceNumber' method to get a better interval around the uniq value
-          minValue = parseFloat(uniqValue / 2);
-          maxValue += minValue;
-        }
-        
-        
         var yMin=minValue,
-        yMax=maxValue,
-        yStep=(maxValue-minValue)/this.options.grid.y.range;
+        yMax=maxValue;
+        
+        if (yMin == yMax){
+          var uniqValue = yMin;
+          var delta=uniqValue*2-this.utils.niceNumber(uniqValue)
+          yMin-=delta;
+          yMax+=delta;
+          
+        }else{
+            var yStep=(maxValue-minValue)/this.options.grid.y.range;
     
-        //enlarge min & max values by one yStep to get bottom and top margin
-        if(this.options.grid.y.startAt===false){
-            yMin-=yStep;
+        
+    
+            //enlarge min & max values by one yStep to get bottom and top margin
+            if(this.options.grid.y.startAt===false){
+                yMin-=yStep;
+            }
+
+
+            yMax+=yStep;
+            yStep=(yMax-yMin)/this.options.grid.y.range;
+            
         }
-        yMax+=yStep;
-        yStep=(yMax-yMin)/this.options.grid.y.range;
+        
     
    
-        this.draw.coord.scale.y.minValue=yMin
-        this.draw.coord.scale.y.maxValue=yMax
-        this.draw.coord.scale.y.step=(this.options.height - this.options.gutter.top - this.options.gutter.bottom)/(yMax-yMin)
-        this.draw.coord.scale.x.step=(this.options.width-(this.options.offset.left+this.options.offset.right)-(this.options.gutter.left+this.options.gutter.right))/this.data.labels.x.length
-
+        this.draw.coord.scale.y.minValue=yMin;
+        this.draw.coord.scale.y.maxValue=yMax;
+        this.draw.coord.scale.y.step=(this.options.height - this.options.gutter.top - this.options.gutter.bottom)/(yMax-yMin);
+        this.draw.coord.scale.x.step=(this.options.width-(this.options.offset.left+this.options.offset.right)-(this.options.gutter.left+this.options.gutter.right))/this.data.labels.x.length;
     }
 
     /**
@@ -864,7 +870,7 @@ var Choopy = (function(){
             for(var j=0;j<this.data.series[i].data.length;j++ ){
                 
                
-                avgValue+=parseInt(this.data.series[i].data[j])
+                avgValue+=parseFloat(this.data.series[i].data[j])
             }
             avgValue=avgValue/this.data.series[i].data.length
             avgValuePerSerie.push({idSerie:i,value:avgValue})
