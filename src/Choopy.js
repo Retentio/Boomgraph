@@ -12,9 +12,9 @@
 
 Raphael.fn.drawGrid = function (x, y, w, h, wv,scale,numTickerY,drawbox) {
     if(drawbox){
-        var path = ["M", Math.round(x) + .5, Math.round(y) + .5, "L", Math.round(x + w-2) + .5, Math.round(y) + .5, Math.round(x + w-2) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y) + .5]
+        var path = ["M", Math.round(x) + .5, Math.round(y) + .5, "L", Math.round(x + w-2) + .5, Math.round(y) + .5, Math.round(x + w-2) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y) + .5];
     }else{
-        var path=[]
+        var path=[];
     }  
     var rowHeight = (h) / (numTickerY);
  
@@ -34,7 +34,7 @@ Raphael.fn.drawGrid = function (x, y, w, h, wv,scale,numTickerY,drawbox) {
     }
     
 
-    return this.path(path.join(","))
+    return this.path(path.join(","));
 };
 
 
@@ -46,11 +46,11 @@ Raphael.el._last={
 };
 Raphael.el.absolutely=function(){
     this.isAbsolute=1;
-    return this
+    return this;
 };
 Raphael.el.relatively=function(){
     this.isAbsolute=0;
-    return this
+    return this;
 };
 Raphael.el.moveTo=function(a,b){
     this._last={
@@ -59,7 +59,7 @@ Raphael.el.moveTo=function(a,b){
     };
     return this.attr({
         path:this.attrs.path+["m","M"][+this.isAbsolute]+parseFloat(a)+" "+parseFloat(b)
-    })
+    });
 };
 Raphael.el.lineTo=function(a,b){
     this._last={
@@ -69,7 +69,7 @@ Raphael.el.lineTo=function(a,b){
     
     return this.attr({
         path:this.attrs.path+["l","L"][+this.isAbsolute]+parseFloat(a)+" "+parseFloat(b)
-    })
+    });
 };
 Raphael.el.cplineTo=function(a,b,c){
     if(a>this._last.x){
@@ -77,7 +77,7 @@ Raphael.el.cplineTo=function(a,b,c){
             //            path:this.attrs.path+["Q",this._last.x+c,this._last.y,a,b]
             path:this.attrs.path+["S",a-c,b,a,b]
         //            path:this.attrs.path+["C",this._last.x+c,this._last.y,a-c,b,a,b]
-        })
+        });
     }
     else{
         a==this._last.x?this.lineTo(a,b):this.attr({
@@ -91,12 +91,12 @@ Raphael.el.cplineTo=function(a,b,c){
         y:b
     };
     
-    return this
+    return this;
 };
 Raphael.el.andClose=function(){
     return this.attr({
         path:this.attrs.path+"z"
-    })
+    });
 };
 
 (function () {
@@ -229,16 +229,16 @@ var Choopy = (function(){
         if(Object.prototype.toString.call(newOptions) == '[object Undefined]' || Object.prototype.toString.call(newOptions.data) == '[object Undefined]' || newOptions['data'] == '' || Object.prototype.toString.call(newOptions.data) == '[object Undefined]'  || newOptions.container == ''){
             throw new Error('Empty data source or container is not allowed');
         }else{
-            var divContainer=document.getElementById(newOptions.container)
+            var divContainer=document.getElementById(newOptions.container);
             if(divContainer==null){
                 throw new Error('There is no div container with this id :'+ newOptions.container);
             }else{
-                var options=this.utils.extend(this.utils.extend({},this.defaultOptions),newOptions)
+                var options=this.utils.extend(this.utils.extend({},this.defaultOptions),newOptions);
                 this.options=(
                     function(){
-                        return options
+                        return options;
                     }
-                    )(options)
+                    )(options);
                     
                     
                 this.data={
@@ -249,12 +249,12 @@ var Choopy = (function(){
                     },
                     longestSerie:0,
                     countSerie:0
-                }
+                };
             
                 if(this.options.height<=0 || this.options.width<=0){
-                    throw new Error('Height and/or width needs to be superior to 0')
+                    throw new Error('Height and/or width needs to be superior to 0');
                 }else{
-                    var r=Raphael(this.options.container, this.options.width, this.options.height)
+                    var r=Raphael(this.options.container, this.options.width, this.options.height);
                 }
                 
             
@@ -300,7 +300,7 @@ var Choopy = (function(){
     Choopy.prototype.setOptions=function(options){
 
         //config
-        this.options=this.utils.extend(this.options,options)
+        this.options=this.utils.extend(this.options,options);
     }
 
 
@@ -320,73 +320,73 @@ var Choopy = (function(){
     
         if(Object.prototype.toString.call(this.options.data) == '[object Array]'){
             if(this.options.data.length==0){
-                throw new Error('options.data shouldn\'t be empty')
+                throw new Error('options.data shouldn\'t be empty');
             }else{
                 this.data.longestSerie=0
                 for(var i=0,ii=this.options.data.length;i<ii;i++){
                     if(this.options.data[i].name=='x-label'){
                         if(Object.prototype.toString.call(this.options.data[i].data) == '[object Function]'){
-                            this.data.labels.x=this.options.data[i].data()
+                            this.data.labels.x=this.options.data[i].data();
                         }else{
-                            this.data.labels.x=this.options.data[i].data
+                            this.data.labels.x=this.options.data[i].data;
                         }
                     }else{
-                        this.options.data[i].name=this.utils.trim(this.options.data[i].name)
-                        this.data.series.push(this.options.data[i])
+                        this.options.data[i].name=this.utils.trim(this.options.data[i].name);
+                        this.data.series.push(this.options.data[i]);
                         if(this.options.data[i].data.length>this.data.longestSerie){
-                            this.data.longestSerie=this.options.data[i].data.length
+                            this.data.longestSerie=this.options.data[i].data.length;
                         }
                     }
                 }
                 
                 if(this.data.labels.x.length>0){
-                    this.data.countSerie=ii-1
+                    this.data.countSerie=ii-1;
                 }else{
                     var generateXLabels=function(longestSerie){
-                        var l=[]
+                        var l=[];
                         for (var i=0,ii=longestSerie;i<ii;i++){
-                            l.push(i)
+                            l.push(i);
                         }
-                        return l
+                        return l;
                     }
-                    this.data.labels.x=generateXLabels(this.data.longestSerie)
-                    this.data.countSerie=ii
+                    this.data.labels.x=generateXLabels(this.data.longestSerie);
+                    this.data.countSerie=ii;
                 }
                 if(this.data.countSerie==0){
-                    throw new Error('you should pass at least one serie')
+                    throw new Error('you should pass at least one serie');
                 }
             }
             
         }else if(Object.prototype.toString.call(this.options.data) == '[object String]'){
-            var table=document.getElementById(this.options.data)
+            var table=document.getElementById(this.options.data);
             if(table==null){
-                throw new Error('No data provided. Check if the id match a well formed html table')
+                throw new Error('No data provided. Check if the id match a well formed html table');
             }else{
-                var values=[]
-
-                var trs=table.getElementsByTagName('tr')
+                var values=[];
+                var trs=table.getElementsByTagName('tr');
+                
                 for(var i= 0; i < trs.length; i++) {
-                    var tdsValues=[]
-                    var tr=trs[i]
+                    var tdsValues=[];
+                    var tr=trs[i];
                     if(tr.getElementsByTagName('th')){
                         
-                        var tds=tr.getElementsByTagName('th')
+                        var tds=tr.getElementsByTagName('th');
                         for(var j=0,jj=tds.length;j<jj;j++){
-                            tdsValues.push(this.utils.trim(tds[j].textContent))
+                            tdsValues.push(this.utils.trim(tds[j].textContent));
                         }
                     }
                     if(tr.getElementsByTagName('td')){
-                        var tds=tr.getElementsByTagName('td')
+                        var tds=tr.getElementsByTagName('td');
                         for(var j=0,jj=tds.length;j<jj;j++){
-                            tdsValues.push(this.utils.trim(tds[j].textContent))
+                            tdsValues.push(this.utils.trim(tds[j].textContent));
                         }
                     }
-                    values.push(tdsValues)
+                    values.push(tdsValues);
                 }
-                this.data.raws=values
+                this.data.raws=values;
             }
         }else{
-            throw new Error('options.data should be an array of series or an id')
+            throw new Error('options.data should be an array of series or an id');
         }
     }
 
@@ -395,19 +395,19 @@ var Choopy = (function(){
  * 
  */
     Choopy.prototype.transversalize=function(){
-        var values=this.data.raws
+        var values=this.data.raws;
     
-        var tmp=[]
+        var tmp=[];
         for(var i= 0,ii=values.length; i < ii; i++) {
         
             for(var j= 0,jj=values[i].length; j < jj; j++) {
                 if(i==0){
-                    tmp.push([])
+                    tmp.push([]);
                 }    
-                tmp[j][i]=values[i][j]
+                tmp[j][i]=values[i][j];
             }
         }
-        this.data.raws=tmp    
+        this.data.raws=tmp;    
     }
 
     /**
@@ -426,22 +426,22 @@ var Choopy = (function(){
             for(var j= 0,jj=values[0].length; j < jj; j++) {
                     
                 if(j==0){
-                    this.data.series[0].name=values[0][j]
+                    this.data.series[0].name=values[0][j];
                
                 }else{
-                    this.data.series[0].data.push(parseFloat(values[0][j]))
+                    this.data.series[0].data.push(parseFloat(values[0][j]));
                 }
             }
-            this.data.longestSerie=values[0].length-1
-            this.data.countSerie=1
+            this.data.longestSerie=values[0].length-1;
+            this.data.countSerie=1;
             var generateXLabels=function(longestSerie){
-                var l=[]
+                var l=[];
                 for (var i=0,ii=longestSerie;i<ii;i++){
-                    l.push(i)
+                    l.push(i);
                 }
-                return l
+                return l;
             }
-            this.data.labels.x=generateXLabels(this.data.longestSerie)
+            this.data.labels.x=generateXLabels(this.data.longestSerie);
                 
         }else{
             for(var i= 0,ii=values.length; i < ii; i++) {
@@ -450,30 +450,30 @@ var Choopy = (function(){
                         name:'',
                         data:[]
                     }
-                    this.data.series.push(serie)
+                    this.data.series.push(serie);
                 }
         
                 for(var j= 0,jj=values[i].length; j < jj; j++) {
                     if(i==0 ){
                         if(j>0){
-                            this.data.labels.x.push(values[i][j])
+                            this.data.labels.x.push(values[i][j]);
                         }
                 
                     }else{
                         if(j==0){
-                            this.data.series[i-1].name=values[i][j]
+                            this.data.series[i-1].name=values[i][j];
                
                         }else{
-                            this.data.series[i-1].data.push(parseFloat(values[i][j]))
+                            this.data.series[i-1].data.push(parseFloat(values[i][j]));
                         }
                         if(this.data.longestSerie<(jj-1)){
-                            this.data.longestSerie=jj-1
+                            this.data.longestSerie=jj-1;
                         }
                     }
                 
                 }
             }
-            this.data.countSerie=this.data.series.length
+            this.data.countSerie=this.data.series.length;
         }
         
     }
@@ -485,22 +485,22 @@ var Choopy = (function(){
     Choopy.prototype.initDraw=function(){
     
         //origin
-        this.draw.coord.origin.X=this.options.offset.left+this.options.gutter.left+.5
-        this.draw.coord.origin.Y=this.options.gutter.top+.5
+        this.draw.coord.origin.X=this.options.offset.left+this.options.gutter.left+.5;
+        this.draw.coord.origin.Y=this.options.gutter.top+.5;
     
         //scaling
         var maxValue=this.data.series[0].data[0],minValue=maxValue;
         if(this.options.grid.y.startAt!==false){
-            minValue=this.options.grid.y.startAt
+            minValue=this.options.grid.y.startAt;
         }
         for(var i= 0; i < this.data.series.length; i++) {
             for(var j= 0; j < this.data.series[i].data.length; j++) {
-                tmp=parseFloat(this.data.series[i].data[j])
+                tmp=parseFloat(this.data.series[i].data[j]);
                 if(tmp>maxValue){
-                    maxValue=tmp
+                    maxValue=tmp;
                 }
                 if(tmp<minValue){
-                    minValue=tmp
+                    minValue=tmp;
                 }
             
             }
@@ -511,7 +511,7 @@ var Choopy = (function(){
         
         if (yMin == yMax){
             var uniqValue = yMin;
-            var delta=uniqValue*2-this.utils.niceNumber(uniqValue)
+            var delta=uniqValue*2-this.utils.niceNumber(uniqValue);
             yMin-=delta;
             yMax+=delta;
           
@@ -556,10 +556,10 @@ var Choopy = (function(){
         });
         
         if(this.options.grid.x.labels.draw){
-            this.drawLabelX()
+            this.drawLabelX();
         }
         if(this.options.grid.y.labels.draw){
-            this.drawLabelY()
+            this.drawLabelY();
         }
         
     }
@@ -604,63 +604,63 @@ var Choopy = (function(){
     }
 
     Choopy.prototype.drawLine=function(idSerie,color,howToScale){
-        var serie=this.draw.r.set()
-        var values=this.data.series[idSerie].data
+        var serie=this.draw.r.set();
+        var values=this.data.series[idSerie].data;
         for (var j=0,jj=values.length; j<jj ; j++){
-            var yVal=values[j]
-            var xScaling=howToScale(idSerie,j)
+            var yVal=values[j];
+            var xScaling=howToScale(idSerie,j);
             //this is based on how we draw the grid (important to keep y scaling consistent)
-            var yDot=this.draw.coord.origin.Y+(this.draw.coord.scale.y.step * (this.draw.coord.scale.y.maxValue-yVal))
-            var xDot = this.draw.coord.origin.X + (xScaling.xFactor) * xScaling.xScale 
+            var yDot=this.draw.coord.origin.Y+(this.draw.coord.scale.y.step * (this.draw.coord.scale.y.maxValue-yVal));
+            var xDot = this.draw.coord.origin.X + (xScaling.xFactor) * xScaling.xScale ;
             var dot = this.draw.r.circle(xDot, yDot, this.options.graph.dot.normal).attr({
                 fill: this.options.color.dot.fill, 
                 stroke: color, 
                 "stroke-width": 2
             });
-            serie.push(dot)
+            serie.push(dot);
             this.draw.matrice[dot.id]={
                 id:dot.id,
                 serieSetId:idSerie,
                 transverseSetId:j
-            }
+            };
             this.draw.dots.push({
                 id:dot.id,
                 dot:dot,
                 x:idSerie,
                 y:j
-            })
+            });
             
-            this.draw.tooltips[dot.id]=this.drawTooltipForPlot(dot, idSerie, j)
+            this.draw.tooltips[dot.id]=this.drawTooltipForPlot(dot, idSerie, j);
             
             if(typeof this.draw.sets.transverses[j] === 'undefined' ){
-                var transverse=this.draw.r.set()
-                transverse.push(dot)
-                this.draw.sets.transverses.push(transverse)
+                var transverse=this.draw.r.set();
+                transverse.push(dot);
+                this.draw.sets.transverses.push(transverse);
             }else{
-                this.draw.sets.transverses[j].push(dot)
+                this.draw.sets.transverses[j].push(dot);
             }
         }
-        pathes=this.joinPlots(idSerie,serie)
+        pathes=this.joinPlots(idSerie,serie);
         return {
             'plots':serie,
             'lines':pathes
-        }
+        };
     }
     
     Choopy.prototype.joinPlots=function(idSerie,serie){
         var pathes,p;
         //pour chaque cohort
     
-        var currentColor=serie[0].attrs.stroke
-        pathes=this.draw.r.set()
+        var currentColor=serie[0].attrs.stroke;
+        pathes=this.draw.r.set();
 
-        var path=this.draw.r.path()
+        var path=this.draw.r.path();
         for (var j=0,jj=serie.length; j<jj ; j++){
             if(j===0){
-                path.moveTo(serie[j].attrs.cx, serie[j].attrs.cy)
+                path.moveTo(serie[j].attrs.cx, serie[j].attrs.cy);
             }else{
                 if(this.options.graph.curve){
-                    path.cplineTo(serie[j].attrs.cx, serie[j].attrs.cy,this.options.graph.curve)
+                    path.cplineTo(serie[j].attrs.cx, serie[j].attrs.cy,this.options.graph.curve);
                 }else{
                     path.lineTo(serie[j].attrs.cx, serie[j].attrs.cy);
                 }
@@ -677,63 +677,63 @@ var Choopy = (function(){
                 "stroke-linejoin": "round"
             });
         }
-        serie.toFront()
-        pathes.push(path)
+        serie.toFront();
+        pathes.push(path);
         return pathes;
     }
 
     Choopy.prototype.drawColumns=function(idSerie,color,howToScale){
-        var serie=this.draw.r.set()
-        var values=this.data.series[idSerie].data
+        var serie=this.draw.r.set();
+        var values=this.data.series[idSerie].data;
         for (var j=0,jj=values.length; j<jj ; j++){
-            var yVal=values[j]
+            var yVal=values[j];
             
-            var xScaling=howToScale(idSerie,j)
-            var yBottom=this.draw.coord.origin.Y+(this.draw.coord.scale.y.step * (this.draw.coord.scale.y.maxValue-Math.max(0,this.draw.coord.scale.y.minValue)))+1
-            var yTop=this.draw.coord.origin.Y+(this.draw.coord.scale.y.step * (this.draw.coord.scale.y.maxValue-yVal))
-            var yValueToZero=Math.abs(yTop-yBottom)
-            var xLeft=this.draw.coord.origin.X + (xScaling.xFactor) * xScaling.xScale
+            var xScaling=howToScale(idSerie,j);
+            var yBottom=this.draw.coord.origin.Y+(this.draw.coord.scale.y.step * (this.draw.coord.scale.y.maxValue-Math.max(0,this.draw.coord.scale.y.minValue)))+1;
+            var yTop=this.draw.coord.origin.Y+(this.draw.coord.scale.y.step * (this.draw.coord.scale.y.maxValue-yVal));
+            var yValueToZero=Math.abs(yTop-yBottom);
+            var xLeft=this.draw.coord.origin.X + (xScaling.xFactor) * xScaling.xScale;
             var rect=this.draw.r.rect(xLeft, Math.min(yTop, yBottom), xScaling.xScale-2, yValueToZero).attr({
                 fill:color,
                 stroke:color,
                 'stroke-width':0
-            })
+            });
             
-            serie.push(rect)
+            serie.push(rect);
             this.draw.matrice[rect.id]={
                 id:rect.id,
                 serieSetId:idSerie,
                 transverseSetId:j
-            }
+            };
             this.draw.dots.push({
                 id:rect.id,
                 dot:rect,
                 x:idSerie,
                 y:j
-            })
+            });
             
-            this.draw.tooltips[rect.id]=this.drawTooltipForColumn(rect, idSerie, j)
+            this.draw.tooltips[rect.id]=this.drawTooltipForColumn(rect, idSerie, j);
             
             if(typeof this.draw.sets.transverses[j] === 'undefined' ){
-                var transverse=this.draw.r.set()
-                transverse.push(rect)
-                this.draw.sets.transverses.push(transverse)
+                var transverse=this.draw.r.set();
+                transverse.push(rect);
+                this.draw.sets.transverses.push(transverse);
             }else{
-                this.draw.sets.transverses[j].push(rect)
+                this.draw.sets.transverses[j].push(rect);
             }
         }
-        return serie
+        return serie;
     }
 
     Choopy.prototype.drawTooltipForPlot=function(plot,x,y){
         var ppp,textLabel;
     
-        textLabel=this.draw.r.set()
+        textLabel=this.draw.r.set();
         var title=this.draw.r.text(160, 0, "").attr({
             'text':this.options.tooltip(this.data,x,y).title+'\n'+this.options.tooltip(this.data,x,y).sub
-        }).attr(this.options.textes.tooltip.title)
+        }).attr(this.options.textes.tooltip.title);
         
-        textLabel.push(title)
+        textLabel.push(title);
 
         var side = "right";
             
@@ -744,16 +744,16 @@ var Choopy = (function(){
             side = "left";
             xPPP-=8
         }
-        ppp = this.draw.r.popup(xPPP,yPPP ,textLabel,side,true)
+        ppp = this.draw.r.popup(xPPP,yPPP ,textLabel,side,true);
         var tooltip=this.draw.r.path().attr({
             path:ppp.path,
             fill: "#000", 
             stroke: "#666", 
             "stroke-width": 2, 
             "fill-opacity": .7
-        }).translate(ppp.dx, ppp.dy)
-        textLabel.translate(ppp.dx, ppp.dy).toFront()
-        return this.draw.r.set(tooltip,textLabel).hide()
+        }).translate(ppp.dx, ppp.dy);
+        textLabel.translate(ppp.dx, ppp.dy).toFront();
+        return this.draw.r.set(tooltip,textLabel).hide();
 
     /**
  *
@@ -796,9 +796,9 @@ var Choopy = (function(){
         textLabel=this.draw.r.set()
         var title=this.draw.r.text(160, 0, "").attr({
             'text':this.options.tooltip(this.data,x,y).title+'\n'+this.options.tooltip(this.data,x,y).sub
-        }).attr(this.options.textes.tooltip.title)
+        }).attr(this.options.textes.tooltip.title);
         
-        textLabel.push(title)
+        textLabel.push(title);
 
         var side = "top";
             
@@ -807,18 +807,18 @@ var Choopy = (function(){
             
         if (column.attrs.cy - textLabel.getBBox().height <0) {
             side = "bottom";
-            xPPP+=2
+            xPPP+=2;
         }
-        ppp = this.draw.r.popup(xPPP,yPPP ,textLabel,side,true)
+        ppp = this.draw.r.popup(xPPP,yPPP ,textLabel,side,true);
         var tooltip=this.draw.r.path().attr({
             path:ppp.path,
             fill: "#000", 
             stroke: "#666", 
             "stroke-width": 2, 
             "fill-opacity": .7
-        }).translate(ppp.dx, ppp.dy)
-        textLabel.translate(ppp.dx, ppp.dy).toFront()
-        return this.draw.r.set(tooltip,textLabel).hide()
+        }).translate(ppp.dx, ppp.dy);
+        textLabel.translate(ppp.dx, ppp.dy).toFront();
+        return this.draw.r.set(tooltip,textLabel).hide();
 
     /**
  *
@@ -852,16 +852,16 @@ var Choopy = (function(){
     }
 
     Choopy.prototype.fillPathes=function(){
-        var zero=this.draw.coord.origin.Y+(this.draw.coord.scale.y.step * (this.draw.coord.scale.y.maxValue-0))+1.5
+        var zero=this.draw.coord.origin.Y+(this.draw.coord.scale.y.step * (this.draw.coord.scale.y.maxValue-0))+1.5;
 
         for(var i=0;i<this.draw.sets.pathes.length;i++ ){
             
             if(this.draw.sets.pathes[i][0].type=='path'){
-                var oldcolor=this.draw.sets.pathes[i][0].attrs.stroke
-                var bgp=this.draw.sets.pathes[i][0].attrs.path
+                var oldcolor=this.draw.sets.pathes[i][0].attrs.stroke;
+                var bgp=this.draw.sets.pathes[i][0].attrs.path;
                     
-                bgp.push(['L',bgp[bgp.length-1][1], zero])
-                bgp.push(['L',bgp[0][1] , zero])
+                bgp.push(['L',bgp[bgp.length-1][1], zero]);
+                bgp.push(['L',bgp[0][1] , zero]);
 
                 var bgpath=this.draw.r.path().attr({
                     path:bgp,
@@ -873,30 +873,30 @@ var Choopy = (function(){
                 })
             }
                 
-            this.draw.sets.pathes[i].push(bgpath)
+            this.draw.sets.pathes[i].push(bgpath);
         }
     
     
     }
     
     Choopy.prototype.sortSeries=function(){
-        var s=this.draw.sets.series
-        var sP=this.draw.sets.pathes
+        var s=this.draw.sets.series;
+        var sP=this.draw.sets.pathes;
 
-        var avgValuePerSerie=[]
+        var avgValuePerSerie=[];
     
         for(var i=0;i<this.data.series.length;i++ ){
-            var avgValue=0
+            var avgValue=0;
             for(var j=0;j<this.data.series[i].data.length;j++ ){
                 
                
-                avgValue+=parseFloat(this.data.series[i].data[j])
+                avgValue+=parseFloat(this.data.series[i].data[j]);
             }
-            avgValue=avgValue/this.data.series[i].data.length
+            avgValue=avgValue/this.data.series[i].data.length;
             avgValuePerSerie.push({
                 idSerie:i,
                 value:avgValue
-            })
+            });
         }
         function compare(a,b) {
             if (a.value < b.value)
@@ -905,10 +905,10 @@ var Choopy = (function(){
                 return -1;
             return 0;
         }
-        avgValuePerSerie.sort(compare)
+        avgValuePerSerie.sort(compare);
         for(var k=0,kk=avgValuePerSerie.length;k<kk;k++){
-            sP[avgValuePerSerie[k].idSerie].toFront()
-            s[avgValuePerSerie[k].idSerie].toFront()
+            sP[avgValuePerSerie[k].idSerie].toFront();
+            s[avgValuePerSerie[k].idSerie].toFront();
         }
         
         
@@ -918,11 +918,11 @@ var Choopy = (function(){
         var p;
      
         for(i=0;i<this.draw.sets.transverses.length;i++){
-            p=['M']
+            p=['M'];
             for(j=0,jj=this.draw.sets.transverses[i].items.length-1;j<jj;j++){
            
-                var thisDot=this.draw.sets.transverses[i].items[j].attrs
-                var nextDot=this.draw.sets.transverses[i].items[j+1].attrs
+                var thisDot=this.draw.sets.transverses[i].items[j].attrs;
+                var nextDot=this.draw.sets.transverses[i].items[j+1].attrs;
                 if (j==0) {
                     p = p.concat(["M", thisDot.cx, thisDot.cy, "L"]);
             
@@ -935,35 +935,35 @@ var Choopy = (function(){
                 "stroke-width": this.options.graph.line.strokeWidth, 
                 "stroke-linejoin": "round"
             }).hide().toBack();
-            this.draw.sets.transverses[i].push(path)
+            this.draw.sets.transverses[i].push(path);
         }
         if(this.draw.grid){
-            this.draw.grid.toBack()
+            this.draw.grid.toBack();
         }
         
     }
     
     Choopy.prototype.hover=function(elem){
-        var self=this
+        var self=this;
         elem.hover(function(){
        
             if(this.type=='circle'){
-                this.attr('r',self.options.graph.dot.hover)
-                self.draw.tooltips[this.id].show().toFront()
+                this.attr('r',self.options.graph.dot.hover);
+                self.draw.tooltips[this.id].show().toFront();
             }
             if(this.type=='rect'){
-                this.attr('fill-opacity',0.7)
-                self.draw.tooltips[this.id].show().toFront()
+                this.attr('fill-opacity',0.7);
+                self.draw.tooltips[this.id].show().toFront();
             }
         },function(){
         
             if(this.type=='circle'){
-                this.attr('r',self.options.graph.dot.normal)
-                self.draw.tooltips[this.id].hide()
+                this.attr('r',self.options.graph.dot.normal);
+                self.draw.tooltips[this.id].hide();
             }
             if(this.type=='rect'){
-                this.attr('fill-opacity',1)
-                self.draw.tooltips[this.id].hide()
+                this.attr('fill-opacity',1);
+                self.draw.tooltips[this.id].hide();
             }
         })
     }
@@ -973,14 +973,14 @@ var Choopy = (function(){
             var	str = str.replace(/^\s\s*/, ''),
             ws = /\s/,
             i = str.length;
-            while (ws.test(str.charAt(--i)));
+            while (ws.test(str.charAt(--i)))
             return str.slice(0, i + 1);
         },
         extend:function(a,b){
             for (var property in b){
                 if(a[property]){
                     if(Object.prototype.toString.call(b[property]) == '[object Object]'){
-                        a[property]=this.extend(a[property],b[property])
+                        a[property]=this.extend(a[property],b[property]);
                     }else{
                         a[property] = b[property];
                     }
@@ -988,7 +988,7 @@ var Choopy = (function(){
                     a[property] = b[property];
                 }
             }
-            return this.clone(a)
+            return this.clone(a);
         },
         clone :function clone(srcInstance){
             if(typeof(srcInstance) != 'object' || srcInstance == null){
@@ -1005,7 +1005,7 @@ var Choopy = (function(){
             c=c<0?parseFloat(Math.pow(10,c).toFixed(Math.abs(c))):Math.pow(10,
                 c);
             d=a/c;
-            return(b?d<1.5?1:d<3?2:d<7?5:10:d<=1?1:d<=2?2:d<=5?5:10)*c
+            return(b?d<1.5?1:d<3?2:d<7?5:10:d<=1?1:d<=2?2:d<=5?5:10)*c;
         }
     }
   
@@ -1095,5 +1095,5 @@ var Choopy = (function(){
             }
         }
     }
-    return Choopy
-})()
+    return Choopy;
+})();
