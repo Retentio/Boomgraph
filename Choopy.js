@@ -10,17 +10,13 @@
 // | with this source code.                                             │ \\
 // └────────────────────────────────────────────────────────────────────┘ \\
 
-Raphael.fn.drawGrid = function (x, y, w, h, wv,scale,numTickerY,drawbox, color) {
-    color = color || "#000";
+Raphael.fn.drawGrid = function (x, y, w, h, wv,scale,numTickerY,drawbox) {
     if(drawbox){
         var path = ["M", Math.round(x) + .5, Math.round(y) + .5, "L", Math.round(x + w-2) + .5, Math.round(y) + .5, Math.round(x + w-2) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y) + .5]
     }else{
         var path=[]
     }  
-    var minValue=scale.y.minValue,
-    maxValue=scale.y.maxValue,
-    rowHeight = (h) / (numTickerY),
-    step=(maxValue-minValue)/numTickerY
+    var rowHeight = (h) / (numTickerY);
  
     for (var i = 0; i <= numTickerY; i++) {
         
@@ -34,19 +30,11 @@ Raphael.fn.drawGrid = function (x, y, w, h, wv,scale,numTickerY,drawbox, color) 
             path = path.concat(["M", x, Math.round(y + i * rowHeight) + .5, "l", w, 0]);
         }
         
-        
-        var yL = Math.round(Math.round(y + i * rowHeight))
-        var t = this.text(15,yL, Math.round((step*(numTickerY-i)+minValue)*100)/100).attr({
-            font: '12px Helvetica, Arial', 
-            fill: color
-        }).toBack();
+       
     }
     
 
-    return this.path(path.join(",")).attr({
-        stroke: color,
-        opacity:0.3
-    });
+    return this.path(path.join(","))
 };
 
 
@@ -90,7 +78,8 @@ Raphael.el.cplineTo=function(a,b,c){
             path:this.attrs.path+["S",a-c,b,a,b]
         //            path:this.attrs.path+["C",this._last.x+c,this._last.y,a-c,b,a,b]
         })
-    }else{
+    }
+    else{
         a==this._last.x?this.lineTo(a,b):this.attr({
             //            path:this.attrs.path+["Q",this._last.x-c,this._last.y,a,b]
             path:this.attrs.path+["S",a+c,b,a,b]
@@ -497,7 +486,7 @@ var Choopy = (function(){
     
         //origin
         this.draw.coord.origin.X=this.options.offset.left+this.options.gutter.left+.5
-        this.draw.coord.origin.Y=this.options.gutter.top
+        this.draw.coord.origin.Y=this.options.gutter.top+.5
     
         //scaling
         var maxValue=this.data.series[0].data[0],minValue=maxValue;
@@ -521,21 +510,18 @@ var Choopy = (function(){
         yMax=maxValue;
         
         if (yMin == yMax){
-          var uniqValue = yMin;
-          var delta=uniqValue*2-this.utils.niceNumber(uniqValue)
-          yMin-=delta;
-          yMax+=delta;
+            var uniqValue = yMin;
+            var delta=uniqValue*2-this.utils.niceNumber(uniqValue)
+            yMin-=delta;
+            yMax+=delta;
           
         }else{
             var yStep=(maxValue-minValue)/this.options.grid.y.range;
-    
-        
     
             //enlarge min & max values by one yStep to get bottom and top margin
             if(this.options.grid.y.startAt===false){
                 yMin-=yStep;
             }
-
 
             yMax+=yStep;
             yStep=(yMax-yMin)/this.options.grid.y.range;
@@ -562,11 +548,20 @@ var Choopy = (function(){
         wv=this.data.countSerie*this.data.labels.x.length, 
         numTickerY=this.options.grid.y.range,
         scale=this.draw.coord.scale,
-        color=this.options.color.grid,
-        drawbox=this.options.grid.drawbox
+        drawbox=this.options.grid.draw.box;
         
-        this.draw.grid=this.draw.r.drawGrid(x, y, w, h, wv,scale,numTickerY,drawbox, color);
-           
+        this.draw.grid=this.draw.r.drawGrid(x, y, w, h, wv,scale,numTickerY,drawbox).attr({
+            stroke: this.options.color.grid,
+            opacity:0.3
+        });
+        
+        if(this.options.grid.x.labels.draw){
+            this.drawLabelX()
+        }
+        if(this.options.grid.y.labels.draw){
+            this.drawLabelY()
+        }
+        
     }
 
     /**
@@ -576,15 +571,36 @@ var Choopy = (function(){
  */
     Choopy.prototype.drawLabelX=function(){
     
-        var labels=this.draw.r.set()
+        var labels=this.draw.r.set();
         for (var i=0,ii=this.data.labels.x.length; i<ii ; i++){
-            if(i%this.options.grid.ticker.x==0 || this.options.grid.ticker.x===false){
-                var x = this.draw.coord.origin.X  + this.draw.coord.scale.x.step * (i + .5)
-                var t = this.draw.r.text(x, this.options.height - 6, this.data.labels.x[i]).attr(this.options.textes.axis).toBack();
-                labels.push(t)
+            if(this.options.grid.x.labels.ticker===false || i%this.options.grid.x.labels.ticker==0 ){
+                var x = this.draw.coord.origin.X  + this.draw.coord.scale.x.step * (i + .5);
+                var t = this.draw.r.text(x, this.options.height - 6, this.options.grid.x.labels.render(this.data.labels.x[i])).attr(this.options.textes.axis).toBack();
+                labels.push(t);
             }
         }
         this.draw.sets.legend.x=labels;
+    }
+    Choopy.prototype.drawLabelY=function(){
+    
+        var minValue=this.draw.coord.scale.y.minValue,
+        maxValue=this.draw.coord.scale.y.maxValue,
+        numLabels=this.options.grid.y.range,
+        rowHeight = (this.options.height - this.options.gutter.top - this.options.gutter.bottom) / numLabels,
+        step=(maxValue-minValue)/numLabels,
+        labels=[];
+        
+        
+        for (var i = 0; i <= numLabels; i++) {
+            var yL = Math.round(Math.round(this.options.gutter.top + .5 + i * rowHeight));
+            var t = this.draw.r.text(0,yL, this.options.grid.y.labels.render(Math.round((step*(numLabels-i)+minValue)*100)/100)).attr({
+                font: '12px Helvetica, Arial', 
+                fill: this.options.color.grid,
+                'text-anchor':'start'
+            }).toBack();
+            labels.push(t);
+        }
+        return labels;
     }
 
     Choopy.prototype.drawLine=function(idSerie,color,howToScale){
@@ -713,7 +729,9 @@ var Choopy = (function(){
         var ppp,textLabel;
     
         textLabel=this.draw.r.set()
-        var title=this.draw.r.text(160, 0, "").attr({'text':this.options.tooltip(this.data,x,y).title+'\n'+this.options.tooltip(this.data,x,y).sub}).attr(this.options.textes.tooltip.title)
+        var title=this.draw.r.text(160, 0, "").attr({
+            'text':this.options.tooltip(this.data,x,y).title+'\n'+this.options.tooltip(this.data,x,y).sub
+        }).attr(this.options.textes.tooltip.title)
         
         textLabel.push(title)
 
@@ -737,37 +755,37 @@ var Choopy = (function(){
         textLabel.translate(ppp.dx, ppp.dy).toFront()
         return this.draw.r.set(tooltip,textLabel).hide()
 
-/**
+    /**
  *
  *  Not working on chrome, but have custom title/subtitle style
  *
  **/
-//        var textLabelF=this.draw.r.set()
-//        var titleF=this.draw.r.text(160, 10, '').attr({'text':this.options.tooltip(this.data,x,y).title}).attr(this.options.textes.tooltip.title)
-//        var subtitleF=this.draw.r.text(160, 27, '').attr({'text':this.options.tooltip(this.data,x,y).sub}).attr(this.options.textes.tooltip.sub)
-//        textLabelF.push(titleF)
-//        textLabelF.push(subtitleF)
-//        
-//           
-//        var side = "right";
-//            
-//        var xPPP=plot.attrs.cx+4,
-//        yPPP=plot.attrs.cy;
-//            
-//        if (plot.attrs.cx + textLabelF.getBBox().width > this.options.width) {
-//            side = "left";
-//            xPPP-=8
-//        }
-//        ppp = this.draw.r.popup(xPPP,yPPP ,textLabelF,side).attr({
-//            fill: "#000", 
-//            stroke: "#666", 
-//            "stroke-width": 2, 
-//            "fill-opacity": .7
-//        })
-//        
-//      
-//       
-//        return this.draw.r.set(ppp,textLabelF).hide()
+    //        var textLabelF=this.draw.r.set()
+    //        var titleF=this.draw.r.text(160, 10, '').attr({'text':this.options.tooltip(this.data,x,y).title}).attr(this.options.textes.tooltip.title)
+    //        var subtitleF=this.draw.r.text(160, 27, '').attr({'text':this.options.tooltip(this.data,x,y).sub}).attr(this.options.textes.tooltip.sub)
+    //        textLabelF.push(titleF)
+    //        textLabelF.push(subtitleF)
+    //        
+    //           
+    //        var side = "right";
+    //            
+    //        var xPPP=plot.attrs.cx+4,
+    //        yPPP=plot.attrs.cy;
+    //            
+    //        if (plot.attrs.cx + textLabelF.getBBox().width > this.options.width) {
+    //            side = "left";
+    //            xPPP-=8
+    //        }
+    //        ppp = this.draw.r.popup(xPPP,yPPP ,textLabelF,side).attr({
+    //            fill: "#000", 
+    //            stroke: "#666", 
+    //            "stroke-width": 2, 
+    //            "fill-opacity": .7
+    //        })
+    //        
+    //      
+    //       
+    //        return this.draw.r.set(ppp,textLabelF).hide()
         
     }
     
@@ -776,7 +794,9 @@ var Choopy = (function(){
         var ppp,textLabel;
     
         textLabel=this.draw.r.set()
-        var title=this.draw.r.text(160, 0, "").attr({'text':this.options.tooltip(this.data,x,y).title+'\n'+this.options.tooltip(this.data,x,y).sub}).attr(this.options.textes.tooltip.title)
+        var title=this.draw.r.text(160, 0, "").attr({
+            'text':this.options.tooltip(this.data,x,y).title+'\n'+this.options.tooltip(this.data,x,y).sub
+        }).attr(this.options.textes.tooltip.title)
         
         textLabel.push(title)
 
@@ -800,34 +820,34 @@ var Choopy = (function(){
         textLabel.translate(ppp.dx, ppp.dy).toFront()
         return this.draw.r.set(tooltip,textLabel).hide()
 
-/**
+    /**
  *
  *  Not working on chrome, but have custom title/subtitle style
  *
  **/
         
-//        var ppp,textLabel;
-//        textLabel=this.draw.r.set()
-//        textLabel.push(this.draw.r.text(60, 12, this.options.tooltip(this.data,x,y).title).attr(this.options.textes.tooltip.title))
-//        textLabel.push(this.draw.r.text(60, 27, this.options.tooltip(this.data,x,y).sub).attr(this.options.textes.tooltip.sub))
-//           
-//        var side = "top";
-//            
-//        var xPPP=column.attrs.x+column.attrs.width/2,
-//        yPPP=column.attrs.y+4;
-//            
-//            
-//        if (column.attrs.cy - textLabel.getBBox().height <0) {
-//            side = "bottom";
-//            xPPP-=8
-//        }
-//        ppp = this.draw.r.popup(xPPP,yPPP ,textLabel,side).attr({
-//            fill: "#000", 
-//            stroke: "#666", 
-//            "stroke-width": 2, 
-//            "fill-opacity": .7
-//        })
-//        return this.draw.r.set(ppp,textLabel).hide()
+    //        var ppp,textLabel;
+    //        textLabel=this.draw.r.set()
+    //        textLabel.push(this.draw.r.text(60, 12, this.options.tooltip(this.data,x,y).title).attr(this.options.textes.tooltip.title))
+    //        textLabel.push(this.draw.r.text(60, 27, this.options.tooltip(this.data,x,y).sub).attr(this.options.textes.tooltip.sub))
+    //           
+    //        var side = "top";
+    //            
+    //        var xPPP=column.attrs.x+column.attrs.width/2,
+    //        yPPP=column.attrs.y+4;
+    //            
+    //            
+    //        if (column.attrs.cy - textLabel.getBBox().height <0) {
+    //            side = "bottom";
+    //            xPPP-=8
+    //        }
+    //        ppp = this.draw.r.popup(xPPP,yPPP ,textLabel,side).attr({
+    //            fill: "#000", 
+    //            stroke: "#666", 
+    //            "stroke-width": 2, 
+    //            "fill-opacity": .7
+    //        })
+    //        return this.draw.r.set(ppp,textLabel).hide()
         
     }
 
@@ -836,22 +856,22 @@ var Choopy = (function(){
 
         for(var i=0;i<this.draw.sets.pathes.length;i++ ){
             
-                if(this.draw.sets.pathes[i][0].type=='path'){
-                    var oldcolor=this.draw.sets.pathes[i][0].attrs.stroke
-                    var bgp=this.draw.sets.pathes[i][0].attrs.path
+            if(this.draw.sets.pathes[i][0].type=='path'){
+                var oldcolor=this.draw.sets.pathes[i][0].attrs.stroke
+                var bgp=this.draw.sets.pathes[i][0].attrs.path
                     
-                    bgp.push(['L',bgp[bgp.length-1][1], zero])
-                    bgp.push(['L',bgp[0][1] , zero])
+                bgp.push(['L',bgp[bgp.length-1][1], zero])
+                bgp.push(['L',bgp[0][1] , zero])
 
-                    var bgpath=this.draw.r.path().attr({
-                        path:bgp,
-                        fill: oldcolor, 
-                        stroke: oldcolor, 
-                        opacity: .4,
-                        "stroke-width": 0, 
-                        "stroke-linejoin": "round"
-                    })
-                }
+                var bgpath=this.draw.r.path().attr({
+                    path:bgp,
+                    fill: oldcolor, 
+                    stroke: oldcolor, 
+                    opacity: .4,
+                    "stroke-width": 0, 
+                    "stroke-linejoin": "round"
+                })
+            }
                 
             this.draw.sets.pathes[i].push(bgpath)
         }
@@ -873,7 +893,10 @@ var Choopy = (function(){
                 avgValue+=parseFloat(this.data.series[i].data[j])
             }
             avgValue=avgValue/this.data.series[i].data.length
-            avgValuePerSerie.push({idSerie:i,value:avgValue})
+            avgValuePerSerie.push({
+                idSerie:i,
+                value:avgValue
+            })
         }
         function compare(a,b) {
             if (a.value < b.value)
@@ -884,8 +907,8 @@ var Choopy = (function(){
         }
         avgValuePerSerie.sort(compare)
         for(var k=0,kk=avgValuePerSerie.length;k<kk;k++){
-             sP[avgValuePerSerie[k].idSerie].toFront()
-             s[avgValuePerSerie[k].idSerie].toFront()
+            sP[avgValuePerSerie[k].idSerie].toFront()
+            s[avgValuePerSerie[k].idSerie].toFront()
         }
         
         
@@ -999,19 +1022,37 @@ var Choopy = (function(){
         },
         gutter:{
             top:30,
-            right:30,
+            right:10,
             bottom:30,
-            left:30
+            left:50
         },
         grid:{
             y:{
                 range:10,
-                startAt:false
+                startAt:false,
+                labels:{
+                    draw:true,
+                    ticker:true,
+                    render:function(string){
+                        return string;
+                    }
+                }
             },
-            ticker:{
-                x:false
+            x:{
+                labels:{
+                    draw:true,
+                    ticker:true,
+                    render:function(string){
+                        return string;
+                    }
+                }
             },
-            drawbox:false
+            draw:{
+                box:false,
+                y:true,
+                x:true
+            }
+            
         },
         textes:{
             axis:{

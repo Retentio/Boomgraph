@@ -17,7 +17,6 @@ var Line = function Line(options){
     choopy.normalize()
     choopy.initDraw()
     choopy.drawGrid()
-    choopy.drawLabelX()
     var serie;
     var howToScale=function(i,j){
         

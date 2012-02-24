@@ -147,7 +147,10 @@ defaultOptions={
             ticker:{
                 x:false
             },
-            drawbox:false
+            draw:{
+                box:false,
+                y:true,
+                x:true
         },
         textes:{
             axis:{
@@ -551,7 +554,9 @@ mySparkbar = new Sparkbar(options);
                     right:0
                 },
                 grid:{
-                    drawbox:true
+                    draw:{
+                        box:true
+                    }
                 }
             }
             new Bar(options);
@@ -595,7 +600,6 @@ mySparkbar = new Sparkbar(options);
     <script src="doc/js/doc.js"></script>
     <script src="vendor/Raphael.js"></script>
     <script src="Choopy.js"></script>
-    <script src="CyclePlot.js"></script>
     <script src="Line.js"></script>
     <script src="Area.js"></script>
     <script src="Bar.js"></script>

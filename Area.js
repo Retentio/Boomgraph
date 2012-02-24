@@ -14,17 +14,15 @@ var Area = function Area(options){
     var choopy=new Choopy(options)
     
     
-    choopy.options.graph.dot.normal=0
-    choopy.options.graph.dot.hover=0
+    choopy.options.graph.dot.normal=0,
+    choopy.options.graph.dot.hover=0;
     choopy.options.grid.y.startAt=0;
     
     choopy.parse()
     choopy.normalize()
     choopy.initDraw()
-    
-    
     choopy.drawGrid()
-    choopy.drawLabelX()
+    
     var serie;
     var howToScale=function(i,j){
         
@@ -33,6 +31,7 @@ var Area = function Area(options){
             xFactor:0.5+j
         }
     }
+    
     for (var i=0,ii=choopy.data.countSerie; i<ii ; i++){
         //we pick a color form the options
         var currentColor=choopy.options.color.serie[i%choopy.options.color.serie.length]
@@ -45,7 +44,7 @@ var Area = function Area(options){
     for (var i=0,ii=choopy.draw.sets.series.length; i<ii ; i++){
         choopy.hover(choopy.draw.sets.series[i])
     }
-    choopy.fillPathes()
     
+    choopy.fillPathes()
     choopy.sortSeries()
 }
