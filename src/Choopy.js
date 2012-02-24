@@ -970,10 +970,10 @@ var Choopy = (function(){
     
     Choopy.prototype.utils={
         trim:function (str) {
-            var	str = str.replace(/^\s\s*/, ''),
+           var	str = str.replace(/^\s\s*/, ''),
             ws = /\s/,
             i = str.length;
-            while (ws.test(str.charAt(--i)))
+            while (ws.test(str.charAt(--i)));
             return str.slice(0, i + 1);
         },
         extend:function(a,b){
