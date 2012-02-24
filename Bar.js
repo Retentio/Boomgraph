@@ -12,13 +12,15 @@
 
 var Bar = function Bar(options){
     
-    var choopy=new Choopy(options)
+    var choopy=new Choopy(options);
     
-    choopy.parse()
-    choopy.normalize()
-    choopy.initDraw()
-    choopy.drawGrid()
-    choopy.drawLabelX()
+    choopy.options.grid.y.startAt=0;
+    
+    choopy.parse();
+    choopy.normalize();
+    choopy.initDraw();
+    choopy.drawGrid();
+    
     var howToScale=function(i,j){
         return{
             xScale:choopy.draw.coord.scale.x.step/choopy.data.longestSerie,

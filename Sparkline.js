@@ -17,19 +17,20 @@ var Sparkline = function Sparkline(options){
     choopy.parse()
     
     var fillLegend=function(ii){
-                             tmp=[]
-                             for (var i=0;i<ii;i++){
-                                 tmp.push(i+"")
-                             }
-                             return tmp;
-                         }
+        tmp=[]
+        for (var i=0;i<ii;i++){
+            tmp.push(i+"")
+        }
+        return tmp;
+    }
     
     
     choopy.data.labels.x= fillLegend(choopy.data.longestSerie)
     choopy.options.graph.dot.normal=0
     choopy.options.graph.dot.hover=0
     choopy.options.graph.line.strokeWidth=2
-    choopy.setOptions({offset:{        
+    choopy.setOptions({
+        offset:{        
             top:0,
             right:0,
             bottom:0,
@@ -40,7 +41,8 @@ var Sparkline = function Sparkline(options){
             right:0,
             bottom:0,
             left:0
-        }})
+        }
+    })
     choopy.initDraw()
     var serie;
     var howToScale=function(i,j){
