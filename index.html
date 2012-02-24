@@ -135,22 +135,37 @@ defaultOptions={
         },
         gutter:{
             top:30,
-            right:30,
+            right:10,
             bottom:30,
-            left:30
+            left:50
         },
         grid:{
             y:{
                 range:10,
-                startAt:false
+                startAt:false,
+                labels:{
+                    draw:true,
+                    ticker:true,
+                    render:function(string){
+                        return string;
+                    }
+                }
             },
-            ticker:{
-                x:false
+            x:{
+                labels:{
+                    draw:true,
+                    ticker:true,
+                    render:function(string){
+                        return string;
+                    }
+                }
             },
             draw:{
                 box:false,
                 y:true,
                 x:true
+            }
+            
         },
         textes:{
             axis:{
