@@ -499,7 +499,7 @@ var Choopy = (function(){
                 if(tmp>maxValue){
                     maxValue=tmp
                 }
-                if(tmp<minValue && ! this.options.grid.y.forceOrdinateOrigin){
+                if(tmp<minValue && (this.options.grid.y.startAt === false || ! this.options.grid.y.forceOrdinateOrigin)){
                     minValue=tmp
                 }
             
