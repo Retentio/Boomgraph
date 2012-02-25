@@ -36,7 +36,7 @@ If you want to use it right now (at your own risk), just take the source :-)
 Sources
 -------
 
-Boomgraph.src.js and Boomgraph.min.js are combined and minified with [Makejs](http://retentio.github.com/Makejs/).
+Boomgraph.src.js and Boomgraph.min.js are combined and minified with [Makejs](http://github.com/Retentio/Makejs).
 Sources for development are on /src. 
 
 Roadmap
