@@ -371,9 +371,10 @@ var Choopy = (function(){
                     coord:{
                         scale:{
                             y:{
-                                minValue:0,
-                                maxValue:0,
-                                step:0
+                                minValue:0,     // min value on Y axis (a nice number < to the min data value
+                                maxValue:0,     // max value on Y axis (a nice number > to the max data value 
+                                step:0,         // amount of pixel between two Y labels
+                                tickers:0       // number of Y tickers (or labels)
                             },
                             x:{
                                 step:0
@@ -402,16 +403,16 @@ var Choopy = (function(){
 
 
     /**
- * Choopy.parse takes data from this.options.data.
- * If an array is given, it should contains all series (even one called "legend" which contains the x axis labels)
- * this.series and this.legends.x will be filled directly
- * If a string is given, it should be the id of an html table which contains all data.
- * The table need to be well formed with :
- *  - thead>tr>th for the x axis labels 
- *  - tbody>tr>td[0] for the name of the serie
- *  - tbody>tr>td[j] the values
- *  this.data.raws will be filled with the table's data
- */
+     * Choopy.parse takes data from this.options.data.
+     * If an array is given, it should contains all series (even one called "legend" which contains the x axis labels)
+     * this.series and this.legends.x will be filled directly
+     * If a string is given, it should be the id of an html table which contains all data.
+     * The table need to be well formed with :
+     *  - thead>tr>th for the x axis labels 
+     *  - tbody>tr>td[0] for the name of the serie
+     *  - tbody>tr>td[j] the values
+     *  this.data.raws will be filled with the table's data
+     */
     Choopy.prototype.parse=function(){
     
         if(Object.prototype.toString.call(this.options.data) == '[object Array]'){
@@ -487,9 +488,9 @@ var Choopy = (function(){
     }
 
     /**
- * Choopy.transversalize reverses lines and columns of the data.raws matrice.
- * 
- */
+     * Choopy.transversalize reverses lines and columns of the data.raws matrice.
+     * 
+     */
     Choopy.prototype.transversalize=function(){
         var values=this.data.raws;
     
@@ -507,10 +508,10 @@ var Choopy = (function(){
     }
 
     /**
- * Choopy.normalize fills data.series and data.labels.x with data.raws.
- * data.countSerie and data.longestSerie will be set up too
- * 
- */
+     * Choopy.normalize fills data.series and data.labels.x with data.raws.
+     * data.countSerie and data.longestSerie will be set up too
+     * 
+     */
     Choopy.prototype.normalize=function(){
         var values=this.data.raws
         if(values.length==1){
@@ -575,9 +576,9 @@ var Choopy = (function(){
     }
 
     /**
- * Choopy.initDraw set up draw.coord values (scalling and origin)
- * 
- */
+     * Choopy.initDraw set up draw.coord values (scalling and origin)
+     * 
+     */
     Choopy.prototype.initDraw = function(){
     
         //origin
@@ -586,11 +587,16 @@ var Choopy = (function(){
     
         //scaling
         var maxValue = this.data.series[0].data[0],
-            minValue = maxValue;
+            minValue;
+            
             
         if(this.options.grid.y.startAt !== false){
             minValue=this.options.grid.y.startAt;
+            
+        }else{
+            minValue = maxValue;
         }
+        
         
         for(var i = 0; i < this.data.series.length; i++) {
             for(var j = 0; j < this.data.series[i].data.length; j++) {
@@ -604,53 +610,73 @@ var Choopy = (function(){
             
             }
         }
-
-        var yMin = minValue,
-        yMax = maxValue;
         
-        if (yMin == yMax){
-            var uniqValue = yMin;
-            if(uniqValue == this.options.grid.y.startAt){
-                yMin=this.options.grid.y.startAt;
-                yMax=this.options.grid.y.startAt+1;
-            }else{
-                var delta = uniqValue * 2 - this.utils.niceNumber(uniqValue);
-                yMin -= delta;
-                yMax += delta;
-            } 
-          
-        }else{
-            var yStep = (maxValue - minValue) / this.options.grid.y.range;
-    
-            //enlarge min & max values by one yStep to get bottom and top margin
-            if(this.options.grid.y.startAt === false){
-                yMin -= yStep;
-            }
-
-            yMax += yStep;
-            yStep = (yMax - yMin) / this.options.grid.y.range;
-            
+        
+        var scaleY={
+            minValue:0,
+            maxValue:0,
+            step:0,
+            tickers:0
         }
         
-    
-   
-        this.draw.coord.scale.y.minValue = yMin;
-        this.draw.coord.scale.y.maxValue = yMax;
-        this.draw.coord.scale.y.step = (this.options.height - this.options.gutter.top - this.options.gutter.bottom) / (yMax - yMin);
+        if(minValue == 0 && minValue == maxValue){
+            scaleY.tickers = 2;
+            scaleY.minValue = 0;
+            scaleY.maxValue = 1;
+            scaleY.step = (this.options.height - this.options.gutter.top - this.options.gutter.bottom);
+        }else{
+            // Based on:
+            // http://books.google.com/books?id=fvA7zLEFWZgC&pg=PA61&lpg=PA61#v=onepage&q&f=false
+            var range       = minValue == maxValue ? this.utils.niceNumber(Math.abs(maxValue), false) : this.utils.niceNumber(maxValue - minValue, false),
+                d           = this.utils.niceNumber(range / (this.options.grid.y.range ), true),
+                precision   = Math.max((-Math.floor(Math.LOG10E * Math.log(d))), 0),
+                graphmin    = this.utils.floorToPrecision(minValue / d , precision) * d,
+                margin      = this.utils.roundToPrecision(this.utils.niceNumber(0.5 * d, true), precision),
+                step        = this.utils.roundToPrecision(d, precision);
+           
+            // Add some headroom to the bottom
+            if (minValue < 0) {
+                graphmin = graphmin - margin;
+            } else {
+                graphmin = Math.max(graphmin - margin, 0);
+            }
+
+            // Round to a proper origin value
+            if (minValue !== maxValue) {
+                graphmin = this.utils.roundToOrigin(graphmin, 1);
+            }
+            
+            scaleY.maxValue=graphmin
+            while(scaleY.maxValue<=maxValue){
+                scaleY.maxValue += step;
+            }
+            
+            scaleY.tickers = 0;
+            scaleY.minValue=scaleY.maxValue
+            while(scaleY.minValue>minValue){
+                scaleY.minValue -= step;
+                scaleY.tickers++;
+            }
+
+            scaleY.step = (this.options.height - this.options.gutter.top - this.options.gutter.bottom)/(scaleY.maxValue - scaleY.minValue);
+            
+        }
+
+        this.draw.coord.scale.y = scaleY;
         this.draw.coord.scale.x.step = (this.options.width - (this.options.offset.left + this.options.offset.right) - (this.options.gutter.left + this.options.gutter.right)) / this.data.labels.x.length;
     }
 
     /**
- * Choopy.drawGrid 
- * 
- */
+     * Choopy.drawGrid 
+     * 
+     */
     Choopy.prototype.drawGrid=function(){
         var x=this.options.gutter.left + .5, 
         y=this.options.gutter.top + .5, 
         w=this.options.width - (this.options.gutter.left + this.options.gutter.right), 
         h=this.options.height - this.options.gutter.top - this.options.gutter.bottom, 
         wv=this.data.countSerie*this.data.labels.x.length, 
-        numTickerY=this.options.grid.y.range,
+        numTickerY=this.draw.coord.scale.y.tickers,
         scale=this.draw.coord.scale,
         drawbox=this.options.grid.draw.box;
         
@@ -669,10 +695,10 @@ var Choopy = (function(){
     }
 
     /**
- * Choopy.drawLabelX draw the x axis labels.
- * Data come from the data.labels.x array
- * It set the raphael draw.sets.legend.x
- */
+     * Choopy.drawLabelX draw the x axis labels.
+     * Data come from the data.labels.x array
+     * It set the raphael draw.sets.legend.x
+     */
     Choopy.prototype.drawLabelX=function(){
     
         var labels=this.draw.r.set();
@@ -689,13 +715,15 @@ var Choopy = (function(){
     
         var minValue=this.draw.coord.scale.y.minValue,
         maxValue=this.draw.coord.scale.y.maxValue,
-        numLabels=this.options.grid.y.range,
+        numLabels=this.draw.coord.scale.y.tickers,
         rowHeight = (this.options.height - this.options.gutter.top - this.options.gutter.bottom) / numLabels,
         step=(maxValue-minValue)/numLabels,
         labels=[];
         
         
         for (var i = 0; i <= numLabels; i++) {
+            //            console.log(this.utils.niceNumber(step*(numLabels-i)+minValue,0.1))
+            
             var yL = Math.round(Math.round(this.options.gutter.top + .5 + i * rowHeight));
             var t = this.draw.r.text(0,yL, this.options.grid.y.labels.render(Math.round((step*(numLabels-i)+minValue)*100)/100)).attr({
                 font: '12px Helvetica, Arial', 
@@ -860,10 +888,10 @@ var Choopy = (function(){
         return this.draw.r.set(tooltip,textLabel).hide();
 
     /**
- *
- *  Not working on chrome, but have custom title/subtitle style
- *
- **/
+         *
+         *  Not working on chrome, but have custom title/subtitle style
+         *
+         **/
     //        var textLabelF=this.draw.r.set()
     //        var titleF=this.draw.r.text(160, 10, '').attr({'text':this.options.tooltip(this.data,x,y).title}).attr(this.options.textes.tooltip.title)
     //        var subtitleF=this.draw.r.text(160, 27, '').attr({'text':this.options.tooltip(this.data,x,y).sub}).attr(this.options.textes.tooltip.sub)
@@ -925,10 +953,10 @@ var Choopy = (function(){
         return this.draw.r.set(tooltip,textLabel).hide();
 
     /**
- *
- *  Not working on chrome, but have custom title/subtitle style
- *
- **/
+         *
+         *  Not working on chrome, but have custom title/subtitle style
+         *
+         **/
         
     //        var ppp,textLabel;
     //        textLabel=this.draw.r.set()
@@ -1074,7 +1102,7 @@ var Choopy = (function(){
     
     Choopy.prototype.utils={
         trim:function (str) {
-           var	str = str.replace(/^\s\s*/, ''),
+            var	str = str.replace(/^\s\s*/, ''),
             ws = /\s/,
             i = str.length;
             while (ws.test(str.charAt(--i)));
@@ -1104,16 +1132,69 @@ var Choopy = (function(){
             }
             return newInstance;
         },
-        niceNumber : function(a,b){
-            if(a==0){
-                return 1;
-            }else{
-                var c=Math.floor(Math.LOG10E*Math.log(a)),d;
-                c=c<0?parseFloat(Math.pow(10,c).toFixed(Math.abs(c))):Math.pow(10,c);
-                d=a/c;
-                return(b?d<1.5?1:d<3?2:d<7?5:10:d<=1?1:d<=2?2:d<=5?5:10)*c;
+        
+       
+
+        roundToPrecision: function(x, precision) {
+            var exp = Math.pow(10, precision);
+            return Math.round(x * exp) / exp;
+        },
+
+        floorToPrecision: function(x, precision) {
+            var exp = Math.pow(10, precision);
+            return Math.floor(x * exp) / exp;
+        },
+
+        ceilToPrecision: function(x, precision) {
+            var exp = Math.pow(10, precision);
+            return Math.ceil(x * exp) / exp;
+        },
+
+        niceNumber: function(x, round) {
+            var exp = Math.floor(Math.LOG10E * Math.log(x)), // exponent of x
+            p, f, nf;
+
+            // Fix for inaccuracies calculating negative powers
+            if (exp < 0) {
+                p = parseFloat(Math.pow(10, exp).toFixed(Math.abs(exp)));
+            } else {
+                p = Math.pow(10, exp);
             }
-            
+            f = x / p;
+
+            if (round) {
+                if (f < 1.5) {
+                    nf = 1;
+                } else if (f < 3) {
+                    nf = 2;
+                } else if (f < 7) {
+                    nf = 5;
+                } else {
+                    nf = 10;
+                }
+            } else {
+                if (f <= 1) {
+                    nf = 1;
+                } else if (f <= 2) {
+                    nf = 2;
+                } else if (f <= 5) {
+                    nf = 5;
+                } else {
+                    nf = 10;
+                }
+            }
+
+            return nf * p;
+        },
+
+        roundToOrigin: function (value, offset) {
+            var rounded_value = value,
+            multiplier;
+
+            offset = offset || 1;
+            multiplier = Math.pow(10, -offset);
+            rounded_value = Math.round(value * multiplier) / multiplier;
+            return (rounded_value > this.min) ? this.roundToOrigin(value - this.step) : rounded_value;
         }
     }
   
@@ -1144,6 +1225,13 @@ var Choopy = (function(){
                     render:function(string){
                         return string;
                     }
+                },
+                scaling:function(y,yMax,yMin,yStep){
+                    percent=Math.abs(y * 100 / yMax)
+                    if( percent > 50){
+                        
+                    }
+                    return val;
                 }
             },
             x:{
