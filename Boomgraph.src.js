@@ -78,8 +78,8 @@ var Bar = function Bar(options){
     
     var howToScale=function(i,j){
         return{
-            xScale:choopy.draw.coord.scale.x.step/choopy.data.longestSerie,
-            xFactor:i+j*choopy.data.longestSerie+0.5
+            xScale:choopy.draw.coord.scale.x.step/choopy.data.countSerie,
+            xFactor:i+j*choopy.data.countSerie
         };
     }
     
@@ -578,58 +578,66 @@ var Choopy = (function(){
  * Choopy.initDraw set up draw.coord values (scalling and origin)
  * 
  */
-    Choopy.prototype.initDraw=function(){
+    Choopy.prototype.initDraw = function(){
     
         //origin
-        this.draw.coord.origin.X=this.options.offset.left+this.options.gutter.left+.5;
-        this.draw.coord.origin.Y=this.options.gutter.top+.5;
+        this.draw.coord.origin.X = this.options.offset.left+this.options.gutter.left+.5;
+        this.draw.coord.origin.Y = this.options.gutter.top+.5;
     
         //scaling
-        var maxValue=this.data.series[0].data[0],minValue=maxValue;
-        if(this.options.grid.y.startAt!==false){
+        var maxValue = this.data.series[0].data[0],
+            minValue = maxValue;
+            
+        if(this.options.grid.y.startAt !== false){
             minValue=this.options.grid.y.startAt;
         }
-        for(var i= 0; i < this.data.series.length; i++) {
-            for(var j= 0; j < this.data.series[i].data.length; j++) {
-                tmp=parseFloat(this.data.series[i].data[j]);
-                if(tmp>maxValue){
-                    maxValue=tmp;
+        
+        for(var i = 0; i < this.data.series.length; i++) {
+            for(var j = 0; j < this.data.series[i].data.length; j++) {
+                tmp = parseFloat(this.data.series[i].data[j]);
+                if(tmp > maxValue){
+                    maxValue = tmp;
                 }
-                if(tmp<minValue){
-                    minValue=tmp;
+                if(tmp < minValue){
+                    minValue = tmp;
                 }
             
             }
         }
 
-        var yMin=minValue,
-        yMax=maxValue;
+        var yMin = minValue,
+        yMax = maxValue;
         
         if (yMin == yMax){
             var uniqValue = yMin;
-            var delta=uniqValue*2-this.utils.niceNumber(uniqValue);
-            yMin-=delta;
-            yMax+=delta;
+            if(uniqValue == this.options.grid.y.startAt){
+                yMin=this.options.grid.y.startAt;
+                yMax=this.options.grid.y.startAt+1;
+            }else{
+                var delta = uniqValue * 2 - this.utils.niceNumber(uniqValue);
+                yMin -= delta;
+                yMax += delta;
+            } 
           
         }else{
-            var yStep=(maxValue-minValue)/this.options.grid.y.range;
+            var yStep = (maxValue - minValue) / this.options.grid.y.range;
     
             //enlarge min & max values by one yStep to get bottom and top margin
-            if(this.options.grid.y.startAt===false){
-                yMin-=yStep;
+            if(this.options.grid.y.startAt === false){
+                yMin -= yStep;
             }
 
-            yMax+=yStep;
-            yStep=(yMax-yMin)/this.options.grid.y.range;
+            yMax += yStep;
+            yStep = (yMax - yMin) / this.options.grid.y.range;
             
         }
         
     
    
-        this.draw.coord.scale.y.minValue=yMin;
-        this.draw.coord.scale.y.maxValue=yMax;
-        this.draw.coord.scale.y.step=(this.options.height - this.options.gutter.top - this.options.gutter.bottom)/(yMax-yMin);
-        this.draw.coord.scale.x.step=(this.options.width-(this.options.offset.left+this.options.offset.right)-(this.options.gutter.left+this.options.gutter.right))/this.data.labels.x.length;
+        this.draw.coord.scale.y.minValue = yMin;
+        this.draw.coord.scale.y.maxValue = yMax;
+        this.draw.coord.scale.y.step = (this.options.height - this.options.gutter.top - this.options.gutter.bottom) / (yMax - yMin);
+        this.draw.coord.scale.x.step = (this.options.width - (this.options.offset.left + this.options.offset.right) - (this.options.gutter.left + this.options.gutter.right)) / this.data.labels.x.length;
     }
 
     /**
@@ -1097,11 +1105,15 @@ var Choopy = (function(){
             return newInstance;
         },
         niceNumber : function(a,b){
-            var c=Math.floor(Math.LOG10E*Math.log(a)),d;
-            c=c<0?parseFloat(Math.pow(10,c).toFixed(Math.abs(c))):Math.pow(10,
-                c);
-            d=a/c;
-            return(b?d<1.5?1:d<3?2:d<7?5:10:d<=1?1:d<=2?2:d<=5?5:10)*c;
+            if(a==0){
+                return 1;
+            }else{
+                var c=Math.floor(Math.LOG10E*Math.log(a)),d;
+                c=c<0?parseFloat(Math.pow(10,c).toFixed(Math.abs(c))):Math.pow(10,c);
+                d=a/c;
+                return(b?d<1.5?1:d<3?2:d<7?5:10:d<=1?1:d<=2?2:d<=5?5:10)*c;
+            }
+            
         }
     }
   
