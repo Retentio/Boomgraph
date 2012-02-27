@@ -25,11 +25,19 @@ Features
 * SparkArea.
 * Choopy to create your graph easily.
 
+
 Installation
 ------------
+
 This project is under heavy development, you can fork or clone the repository.
 If you want to use it right now (at your own risk), just take the source :-)
 
+
+Sources
+-------
+
+Boomgraph.src.js and Boomgraph.min.js are combined and minified with [Makejs](http://github.com/Retentio/Makejs).
+Sources for development are on /src. 
 
 Roadmap
 -------
