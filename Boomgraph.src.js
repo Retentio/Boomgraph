@@ -78,8 +78,8 @@ var Bar = function Bar(options){
     
     var howToScale=function(i,j){
         return{
-            xScale:choopy.draw.coord.scale.x.step/choopy.data.countSerie,
-            xFactor:i+j*choopy.data.countSerie
+            xScale:choopy.draw.coord.scale.x.step/(choopy.data.countSerie + .5),
+            xFactor:i+j*(choopy.data.countSerie+.5)
         };
     }
     
@@ -377,16 +377,12 @@ var Choopy = (function(){
                                 tickers:0       // number of Y tickers (or labels)
                             },
                             x:{
-                                step:0
+                                step:0          // amount of pixel allowed for a ticker
                             }
                         },
-                        origin:{
-                            X:0,
-                            Y:0
-                        },
-                        bound:{
-                            yMin:0,
-                            yMax:0
+                        origin:{                // position of the graph inside the container
+                            X:0,                // on X
+                            Y:0                 // on Y
                         }
                     }
                 }
@@ -1199,54 +1195,47 @@ var Choopy = (function(){
     }
   
     Choopy.prototype.defaultOptions={
-        data:'',
-        container:'',
-        width:600,
-        height:400,
-        offset:{        
-            top:20,
+        data:'',                                // an array of series or an id related to an html table
+        container:'',                           // id of the div which will be contains your graph
+        width:600,                              // width of your container
+        height:400,                             // height of your container
+        offset:{                                // offset is to take off the chart from axis
+            top:20,         
             right:20,
             bottom:20,
             left:20
         },
-        gutter:{
-            top:30,
+        gutter:{                                // gutter set the padding between the chart and the container
+            top:10,                             
             right:10,
-            bottom:30,
-            left:50
+            bottom:30,                          // bottom...
+            left:50                             // and left are bigger because they contains axis legends
         },
-        grid:{
-            y:{
-                range:10,
-                startAt:false,
+        grid:{                                  // tune your grid
+            y:{                                 
+                range:10,                       // how many horizontal lines do you expect? it gives precisions to your grid but Choopy optimize them.
+                startAt:false,                  // fix an initial value (forced to 0 for bar and area charts)
                 labels:{
-                    draw:true,
-                    ticker:true,
-                    render:function(string){
-                        return string;
-                    }
-                },
-                scaling:function(y,yMax,yMin,yStep){
-                    percent=Math.abs(y * 100 / yMax)
-                    if( percent > 50){
-                        
-                    }
-                    return val;
-                }
-            },
-            x:{
-                labels:{
-                    draw:true,
-                    ticker:true,
-                    render:function(string){
+                    draw:true,                  // show labels
+                    ticker:true,                // show tickers
+                    render:function(string){    // if you want to add a units or something else, it's here
                         return string;
                     }
                 }
             },
-            draw:{
-                box:false,
-                y:true,
-                x:true
+            x:{                                 
+                labels:{                        
+                    draw:true,                  // show labels
+                    ticker:true,                // show tickers
+                    render:function(string){    // customize your x labels
+                        return string;
+                    }
+                }
+            },
+            draw:{      
+                box:false,                      // draw a bow around your graph
+                y:true,                         // draw horizontal lines
+                x:true                          // draw vertical lines
             }
             
         },
@@ -1266,7 +1255,7 @@ var Choopy = (function(){
                 }
             }
         },
-        tooltip:function(data,x,y){
+        tooltip:function(data,x,y){             // customize the value shown on your tooltips
             return {
                 title:data.series[x].name,
                 sub:data.series[x].data[y]
@@ -1281,13 +1270,13 @@ var Choopy = (function(){
             grid:'#333'
         },
         graph:{
-            curve:0,
+            curve:0,                        // make your chart more curved
             dot:{
-                normal:4,
-                hover:6
+                normal:4,                   // dot radius in px
+                hover:6                     //dot radius in pixel on hover
             },
             line:{
-                strokeWidth:4
+                strokeWidth:4               // line width
             }
         }
     }

@@ -23,8 +23,8 @@ var Bar = function Bar(options){
     
     var howToScale=function(i,j){
         return{
-            xScale:choopy.draw.coord.scale.x.step/choopy.data.countSerie,
-            xFactor:i+j*choopy.data.countSerie
+            xScale:choopy.draw.coord.scale.x.step/(choopy.data.countSerie + .5),
+            xFactor:i+j*(choopy.data.countSerie+.5)
         };
     }
     
