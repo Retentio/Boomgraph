@@ -101,8 +101,9 @@
 Choopy.prototype.defaultOptions={
         data:'',                                // an array of series or an id related to an html table
         container:'',                           // id of the div which will be contains your graph
-        width:600,                              // width of your container
+        width:640,                              // width of your container
         height:400,                             // height of your container
+        auto_adjust:false,                      // if you prefer set the container size in your css
         offset:{                                // offset is to take off the chart from axis
             top:20,         
             right:20,
@@ -112,7 +113,7 @@ Choopy.prototype.defaultOptions={
         gutter:{                                // gutter set the padding between the chart and the container
             top:10,                             
             right:10,
-            bottom:30,                          // bottom...
+            bottom:40,                          // bottom...
             left:50                             // and left are bigger because they contains axis legends
         },
         grid:{                                  // tune your grid
@@ -123,8 +124,19 @@ Choopy.prototype.defaultOptions={
                     draw:true,                  // show labels
                     ticker:true,                // show tickers
                     render:function(string){    // if you want to add a units or something else, it's here
-                        return string;
+                        return {
+                            font: '10px Helvetica, Arial', 
+                            fill: "#333",
+                            text:string
+                        };
                     }
+                },
+                legend:{
+                    text:'Y-values',
+                    font: '14px Helvetica, Arial', 
+                    'font-weight':'bold',
+                    fill: "#333",
+                    show:true
                 }
             },
             x:{                                 
@@ -132,21 +144,42 @@ Choopy.prototype.defaultOptions={
                     draw:true,                  // show labels
                     ticker:true,                // show tickers
                     render:function(string){    // customize your x labels
-                        return string;
+                        return {
+                            font: '10px Helvetica, Arial', 
+                            fill: "#333",
+                            text:string
+                        }
                     }
+                },
+                legend:{
+                    text:'X-values',
+                    font: '14px Helvetica, Arial', 
+                    fill: "#333",
+                    'font-weight':'bold',
+                    show:true
                 }
             },
             draw:{      
                 box:false,                      // draw a bow around your graph
                 y:true,                         // draw horizontal lines
-                x:true                          // draw vertical lines
+                x:false                         // draw vertical lines
             }
             
         },
         textes:{
             axis:{
-                font: '10px Helvetica, Arial', 
-                fill: "#333"
+                
+                x:{
+                    labels:{
+                        font: '10px Helvetica, Arial', 
+                        fill: "#333"
+                    },
+                    legend:{
+                        show:true,
+                        font: '12px Helvetica, Arial', 
+                        fill: "#333"
+                    }
+                }
             },
             tooltip:{
                 title:{
@@ -157,6 +190,10 @@ Choopy.prototype.defaultOptions={
                     font: '10px Helvetica, Arial', 
                     fill: "#fff"
                 }
+            },
+            legend:{
+                    font: '12px Helvetica, Arial', 
+                    fill: "#fff"
             }
         },
         tooltip:function(data,x,y){             // customize the value shown on your tooltips

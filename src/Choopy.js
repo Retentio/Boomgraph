@@ -1220,7 +1220,7 @@ var Choopy = (function(){
             draw:{      
                 box:false,                      // draw a bow around your graph
                 y:true,                         // draw horizontal lines
-                x:false                          // draw vertical lines
+                x:false                         // draw vertical lines
             }
             
         },
