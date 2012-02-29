@@ -259,7 +259,9 @@ hr.soften {
   margin: 4px 5px 0 0;
 }
 
-
+.big-chart{
+    height:400px
+}
 
 /* Footer
 -------------------------------------------------- */

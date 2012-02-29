@@ -204,7 +204,7 @@ Choopy.prototype.defaultOptions={
                     </div>
                     <div class="span9 columns">
                         <h2>Example</h2>
-                        <div id="boomgraph-container-line">
+                        <div id="boomgraph-container-line" class="big-chart">
 
                         </div>
 
@@ -240,7 +240,7 @@ myLineChart = new Line(options);
                     </div>
                     <div class="span9 columns">
                         <h2>Example</h2>
-                        <div id="boomgraph-container-area">
+                        <div id="boomgraph-container-area" class="big-chart">
 
                         </div>
 
@@ -275,7 +275,7 @@ myAreaChart = new Area(options);
                     </div>
                     <div class="span9 columns">
                         <h2>Example</h2>
-                        <div id="boomgraph-container-bar">
+                        <div id="boomgraph-container-bar" class="big-chart">
 
                         </div>
 
@@ -585,16 +585,21 @@ coord:{
                 options={
                     data:'fixture',
                     container:'boomgraph-container-line',
-                    width:700,
+                    auto_adjust:true,
                     gutter:{
                         right:0
+                    },
+                    grid:{
+                        draw:{
+                            x:true
+                        }
                     }
                 }
                 new Line(options);
                 options={
                     data:'fixture',
                     container:'boomgraph-container-area',
-                    width:700,
+                    auto_adjust:true,
                     gutter:{
                         right:0
                     }
@@ -603,7 +608,7 @@ coord:{
                 options={
                     data:'fixture',
                     container:'boomgraph-container-bar',
-                    width:700,
+                    auto_adjust:true,
                     gutter:{
                         right:0
                     },
