@@ -39,14 +39,12 @@ Sources
 Boomgraph.src.js and Boomgraph.min.js are combined and minified with [Makejs](http://github.com/Retentio/Makejs).
 Sources for development are on /src. 
 
+
 Roadmap
 -------
 
-<<<<<<< HEAD
 Improve unit tests (refacto and upgrade coverage), add pie charts, increase customisation, better management of Y-scale
-=======
-Improve unit tests (refacto and upgrade coverage), add pie charts, increase customization, better management of Y-scale
->>>>>>> master
+
 
 Example
 -------
