@@ -31,22 +31,31 @@
             <header class="jumbotron subhead" id="overview">
                 <h1>Boomgraph</h1>
                 <p class="lead">A chart library based on <a href="http://raphaeljs.com/" target="_blank">Raphael</a>.
-                <p class="lead">Boomgraph on <a href="http://github.com/retentio/Boomgraph/" target="_blank">Github</a>.
-                <div class="subnav">
-                    <ul class="nav nav-pills">
-                        <li><a href="#concept">Concept</a></li>
-                        <li><a href="#options">Options</a></li>
-                        <li><a href="#line">Line</a></li>
-                        <li><a href="#area">Area</a></li>
-                        <li><a href="#bar">Bar</a></li>
-                        <li><a href="#sparkline">Sparkline</a></li>
-                        <li><a href="#sparkarea">Sparkarea</a></li>
-                        <li><a href="#sparkbar">Sparkbar</a></li>
-                        <li><a href="#choopy">Choopy</a></li>
-                    </ul>
-                </div>
-            </header>
+                    <!--                <p class="lead">Boomgraph on <a href="http://github.com/retentio/Boomgraph/" target="_blank">Github</a>.-->
 
+
+
+                <div style="bottom: 0;position: absolute;right: 0;">
+                    <p class="download-info">
+                        <a href="http://github.com/retentio/Boomgraph/" class="btn btn-primary btn-large">View project on GitHub</a>
+                        <a href="https://raw.github.com/Retentio/Boomgraph/master/Boomgraph.min.js" class="btn btn-large">Download Boomgraph</a>
+                    </p>
+                </div>
+                <div style="clear:both"></div>
+            </header>
+            <div class="subnav">
+                <ul class="nav nav-pills">
+                    <li><a href="#concept">Concept</a></li>
+                    <li><a href="#options">Options</a></li>
+                    <li><a href="#line">Line</a></li>
+                    <li><a href="#area">Area</a></li>
+                    <li><a href="#bar">Bar</a></li>
+                    <li><a href="#sparkline">Sparkline</a></li>
+                    <li><a href="#sparkarea">Sparkarea</a></li>
+                    <li><a href="#sparkbar">Sparkbar</a></li>
+                    <li><a href="#choopy">Choopy</a></li>
+                </ul>
+            </div>
 
 
             <!-- Concept
@@ -78,7 +87,7 @@
 
 
 
-         
+
 
 
 
@@ -441,8 +450,8 @@ mySparkbar = new Sparkbar(options);
                 </div>
             </section>
 
-               <!-- Choopy
-            ================================================== -->
+            <!-- Choopy
+         ================================================== -->
             <section id="choopy">
                 <div class="page-header">
                     <h1>Choopy <small>Choopy.js</small></h1>
@@ -470,15 +479,15 @@ options.data=[
                         </pre>
                         <p>If you want to give the X axis labels, just give another serie with the name <code>'x-labels'</code>.</p>
                         <p>You can also set an id related to an html table.</p>
-                        
+
                         <h4>.transversalize()</h4>
                         <p>In most case, data are organized by row and it's easiest to put them in a table by row too. But you might want to draw them by column. That's the purpose of <code>transversalize()</code></p>
                         <p>Data are extracted from the table to a javascript array (a matrice called <code>data.raws</code> in Choopy) and an element with the coord. (i,j) will get the coord (j,i).</p>
-                        
+
                         <h4>.normalize()</h4>
                         <p>Once the table is parsed and possibly transversalized, data need to be normalized. The first line will become the X labels (if your table contains only one row, labels will be automagically created). </p>
                         <p>Every other rows will become series. The first element on a row is the serie's name and next they are considered as values to be graphed.</p>
-                        
+
                         <h4>.initDraw()</h4>
                         <p>Based on data you have parsed, <code>initDraw()</code> will set every constant needed by choopy to draw your graph. </p>
                         <pre class="prettyprint linenums">
@@ -503,8 +512,8 @@ coord:{
                     </div>
                 </div>
             </section>
-            
-            
+
+
             <!-- Footer
              ================================================== -->
             <footer class="footer">
