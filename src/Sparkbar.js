@@ -29,6 +29,7 @@ var Sparkbar = function Sparkbar(options){
     choopy.options.graph.dot.normal=0;
     choopy.options.graph.dot.hover=0;
     choopy.options.graph.line.strokeWidth=2;
+    choopy.options.legend.display=false;
     choopy.setOptions({
         offset:{        
             top:0,

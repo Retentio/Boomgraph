@@ -694,7 +694,7 @@ var Choopy = (function(){
         for (var i = 0, ii = this.data.countSerie; i < ii ; i++){
             
             var itemSet = this.draw.paper.set(),
-                currentColor = this.options.color.serie[i%this.options.color.serie.length];
+            currentColor = this.options.color.serie[i%this.options.color.serie.length];
                 
             // the small rect with the color of the serie    
             var rect=this.draw.paper.rect(currentX,currentY,15,15,5).attr({
@@ -1235,15 +1235,20 @@ var Choopy = (function(){
             if(self.draw.sets.series[serieID][0].node.style.display == 'none'){
                 self.draw.sets.legend[serieID][0].attr({
                     fill: self.draw.sets.legend[serieID][0]._realColor
-                    })
+                })
                 self.draw.sets.series[serieID].show();
-                self.draw.sets.pathes[serieID].show();
+                if(self.draw.sets.pathes[serieID]){
+                    
+                    self.draw.sets.pathes[serieID].show();
+                }
             }else{
                 self.draw.sets.legend[serieID][0].attr({
                     fill: "#AAA"
                 })    
                 self.draw.sets.series[serieID].hide();
-                self.draw.sets.pathes[serieID].hide();
+                if(self.draw.sets.pathes[serieID]){
+                    self.draw.sets.pathes[serieID].hide();
+                }
             }
            
         })
@@ -1556,6 +1561,7 @@ var Sparkarea = function Sparkarea(options){
     choopy.options.graph.dot.normal=0;
     choopy.options.graph.dot.hover=0;
     choopy.options.graph.line.strokeWidth=2;
+    choopy.options.legend.display=false;
     choopy.setOptions({
         offset:{        
             top:0,
@@ -1620,6 +1626,7 @@ var Sparkbar = function Sparkbar(options){
     choopy.options.graph.dot.normal=0;
     choopy.options.graph.dot.hover=0;
     choopy.options.graph.line.strokeWidth=2;
+    choopy.options.legend.display=false;
     choopy.setOptions({
         offset:{        
             top:0,
@@ -1684,6 +1691,7 @@ var Sparkline = function Sparkline(options){
     choopy.options.graph.dot.normal=0;
     choopy.options.graph.dot.hover=0;
     choopy.options.graph.line.strokeWidth=2;
+    choopy.options.legend.display=false;
     choopy.setOptions({
         offset:{        
             top:0,
