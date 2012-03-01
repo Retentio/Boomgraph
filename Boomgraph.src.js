@@ -133,10 +133,15 @@ Raphael.fn.drawGrid = function (x, y, w, h, wv,scale,drawbox) {
 
 
 Raphael.el.isAbsolute=!0;
+Raphael.el._realColor=null;
 
 Raphael.el._last={
     x:0,
     y:0
+};
+Raphael.el.setRealColor=function(color){
+    this._realColor=color;
+    return this;
 };
 Raphael.el.absolutely=function(){
     this.isAbsolute=1;
@@ -319,75 +324,77 @@ Raphael.el.andClose=function(){
 var Choopy = (function(){
 
     
-    var Choopy=function Choopy(newOptions){
+    var Choopy = function Choopy(newOptions){
         if(Object.prototype.toString.call(newOptions) == '[object Undefined]' || Object.prototype.toString.call(newOptions.data) == '[object Undefined]' || newOptions['data'] == '' || Object.prototype.toString.call(newOptions.data) == '[object Undefined]'  || newOptions.container == ''){
             throw new Error('Empty data source or container is not allowed');
         }else{
             var divContainer=document.getElementById(newOptions.container);
-            if(divContainer==null){
+            if(divContainer == null){
                 throw new Error('There is no div container with this id :'+ newOptions.container);
             }else{
-                var options=this.utils.extend(this.utils.extend({},this.defaultOptions),newOptions);
-                this.options=(
+                var options = this.utils.extend(this.utils.extend({},this.defaultOptions),newOptions);
+                this.options = (
                     function(){
                         return options;
                     }
                     )(options);
                     
                     
-                this.data={
-                    raws:[],
-                    series:[],
-                    labels:{
-                        x:[]
+                this.data = {
+                    raws: [],
+                    series: [],
+                    labels: {
+                        x: []
                     },
-                    longestSerie:0,
-                    countSerie:0
+                    longestSerie: 0,
+                    countSerie: 0
                 };
             
                 if((this.options.height <= 0 || this.options.width <= 0) && this.options.auto_adjust != true){
                     throw new Error('Height and/or width needs to be superior to 0');
                 }else{
                     
-                    if(this.options.auto_adjust==true || this.options.height==0 || this.options.width==0){
+                    if(this.options.auto_adjust == true || this.options.height == 0 || this.options.width == 0){
                         container = document.getElementById(this.options.container)
                         this.options.height = container.offsetHeight
                         this.options.width = container.offsetWidth
                     }
-                    var r   = Raphael(this.options.container, this.options.width, this.options.height);
+                    var r = Raphael(this.options.container, this.options.width, this.options.height);
                               
                 }
                 
             
-                this.draw={
-                    paper:r,
-                    sets:{
-                        series:[],
-                        transverses:[],
-                        pathes:[],
-                        legend:{
-                            x:[]
-                        }
+                this.draw = {
+                    paper: r,
+                    sets: {
+                        series: [],
+                        transverses: [],
+                        pathes: [],
+                        labels: {
+                            x: [],
+                            y: []
+                        },
+                        legend: []
                     },
-                    matrice:{},
-                    dots:[],
-                    tooltips:{},
-                    grid:null,
-                    coord:{
-                        scale:{
-                            y:{
-                                minValue:0,     // min value on Y axis (a nice number < to the min data value
-                                maxValue:0,     // max value on Y axis (a nice number > to the max data value 
-                                step:0,         // amount of pixel between two Y labels
-                                tickers:0       // number of Y tickers (or labels)
+                    matrice: {},
+                    dots: [],
+                    tooltips: {},
+                    grid: null,
+                    coord: {
+                        scale: {
+                            y: {
+                                minValue: 0,     // min value on Y axis (a nice number < to the min data value
+                                maxValue: 0,     // max value on Y axis (a nice number > to the max data value 
+                                step: 0,         // amount of pixel between two Y labels
+                                tickers: 0       // number of Y tickers (or labels)
                             },
-                            x:{
-                                step:0          // amount of pixel allowed for a ticker
+                            x: {
+                                step: 0          // amount of pixel allowed for a ticker
                             }
                         },
-                        origin:{                // position of the graph inside the container
-                            X:0,                // on X
-                            Y:0                 // on Y
+                        origin: {                // position of the graph inside the container
+                            X: 0,                // on X
+                            Y: 0                 // on Y
                         }
                     }
                 }
@@ -395,13 +402,11 @@ var Choopy = (function(){
         }
     }
 
-    Choopy.prototype.setOptions=function(options){
+    Choopy.prototype.setOptions = function(options){
 
         //config
         this.options=this.utils.extend(this.options,options);
     }
-
-
 
     /**
      * Choopy.parse takes data from this.options.data.
@@ -414,7 +419,7 @@ var Choopy = (function(){
      *  - tbody>tr>td[j] the values
      *  this.data.raws will be filled with the table's data
      */
-    Choopy.prototype.parse=function(){
+    Choopy.prototype.parse = function(){
     
         if(Object.prototype.toString.call(this.options.data) == '[object Array]'){
             if(this.options.data.length==0){
@@ -492,7 +497,7 @@ var Choopy = (function(){
      * Choopy.transversalize reverses lines and columns of the data.raws matrice.
      * 
      */
-    Choopy.prototype.transversalize=function(){
+    Choopy.prototype.transversalize = function(){
         var values=this.data.raws;
     
         var tmp=[];
@@ -513,7 +518,7 @@ var Choopy = (function(){
      * data.countSerie and data.longestSerie will be set up too
      * 
      */
-    Choopy.prototype.normalize=function(){
+    Choopy.prototype.normalize = function(){
         var values=this.data.raws
         if(values.length==1){
             var serie={
@@ -582,13 +587,19 @@ var Choopy = (function(){
      */
     Choopy.prototype.initDraw = function(){
     
+        if(this.options.legend.display != false){
+            this.drawLegend();
+        }
+    
         //origin
         this.draw.coord.origin.X = this.options.offset.left+this.options.gutter.left+.5;
         this.draw.coord.origin.Y = this.options.gutter.top+.5;
     
+       
+    
         //scaling
         var maxValue = this.data.series[0].data[0],
-            minValue;
+        minValue;
             
             
         if(this.options.grid.y.startAt !== false){
@@ -620,20 +631,22 @@ var Choopy = (function(){
             tickers:0
         }
         
+        
+        
         if(minValue == 0 && minValue == maxValue){
             scaleY.tickers = 2;
             scaleY.minValue = 0;
             scaleY.maxValue = 1;
             scaleY.step = (this.options.height - this.options.gutter.top - this.options.gutter.bottom);
         }else{
-            // Based on:
+            // Inspired by:
             // http://books.google.com/books?id=fvA7zLEFWZgC&pg=PA61&lpg=PA61#v=onepage&q&f=false
             var range       = minValue == maxValue ? this.utils.niceNumber(Math.abs(maxValue), false) : this.utils.niceNumber(maxValue - minValue, false),
-                d           = this.utils.niceNumber(range / (this.options.grid.y.range ), true),
-                precision   = Math.max((-Math.floor(Math.LOG10E * Math.log(d))), 0),
-                graphmin    = this.utils.floorToPrecision(minValue / d , precision) * d,
-                margin      = this.utils.roundToPrecision(this.utils.niceNumber(0.5 * d, true), precision),
-                step        = this.utils.roundToPrecision(d, precision);
+            d           = this.utils.niceNumber(range / (this.options.grid.y.range ), true),
+            precision   = Math.max((-Math.floor(Math.LOG10E * Math.log(d))), 0),
+            graphmin    = this.utils.floorToPrecision(minValue / d , precision) * d,
+            margin      = this.utils.roundToPrecision(this.utils.niceNumber(0.5 * d, true), precision),
+            step        = this.utils.roundToPrecision(d, precision);
            
             // Add some headroom to the bottom
             if (minValue < 0) {
@@ -666,41 +679,104 @@ var Choopy = (function(){
         this.draw.coord.scale.y = scaleY;
         this.draw.coord.scale.x.step = (this.options.width - (this.options.offset.left + this.options.offset.right) - (this.options.gutter.left + this.options.gutter.right)) / this.data.labels.x.length;
         this.draw.coord.scale.x.tickers = this.data.labels.x.length;
+        
+       
+        
+        
+        
     }
+
+    Choopy.prototype.drawLegend = function (){
+        var legendSet = this.draw.paper.set(),
+        currentX = this.options.gutter.left + .5,
+        currentY = this.options.gutter.top + .5;
+        
+        for (var i = 0, ii = this.data.countSerie; i < ii ; i++){
+            
+            var itemSet = this.draw.paper.set(),
+                currentColor = this.options.color.serie[i%this.options.color.serie.length];
+                
+            // the small rect with the color of the serie    
+            var rect=this.draw.paper.rect(currentX,currentY,15,15,5).attr({
+                fill: currentColor,
+                stroke: currentColor,
+                'stroke-width': 0,
+                'stroke-opacity': 0
+            }).setRealColor(currentColor);
+            
+            // we add it to the matrice to get back easily the serie id with the raphael element id
+            this.draw.matrice[rect.id]={
+                id:rect.id,
+                serieSetId:i
+            };
+            
+            // the cursor move right
+            currentX += 20+5;
+            
+            // the legend itself
+            var text=this.draw.paper.text(currentX,currentY+10).attr({
+                'text-anchor':'start'
+            }).attr(this.options.legend.render(this.data.series[i].name));
+            
+            // added to the matrice
+            this.draw.matrice[text.id]={
+                id:text.id,
+                serieSetId:i
+            };
+            
+            // cursor to the right
+            currentX += text.getBBox().width+10;
+            
+            // itemset populated (with one rect and one serie name
+            itemSet.push(rect)
+            itemSet.push(text)
+            
+            // click event binded to the legend item set
+            this.clickLegend(itemSet)
+            
+            // if we the legend is too large, we split it in a new line
+            if(currentX >= (this.options.width-this.options.gutter.left-this.options.gutter.right)){
+                currentY += 25;
+                currentX = this.options.gutter.left + .5;
+            }
+            
+            // itemset push on the legendset
+            legendSet.push(itemSet)
+        }
+        
+        // if the legend is higher than the top gutter, we extend the top gutter
+        if(legendSet.getBBox().height >= this.options.gutter.top){
+            this.options.gutter.top = legendSet.getBBox().height+15;
+        }
+        
+        // and we center the legend horizontaly
+        legendSet.translate((this.options.width-this.options.gutter.left-this.options.gutter.right-legendSet.getBBox().width)/2, 0)
+        
+        // and assign it to Choopy
+        this.draw.sets.legend = legendSet;
+    }
+
 
     /**
      * Choopy.drawGrid 
      * 
      */
-    Choopy.prototype.drawGrid=function(){
-        var x=this.options.gutter.left + .5, 
-        y=this.options.gutter.top + .5, 
-        w=this.options.width - (this.options.gutter.left + this.options.gutter.right), 
-        h=this.options.height - this.options.gutter.top - this.options.gutter.bottom, 
-        wv=this.data.countSerie*this.data.labels.x.length, 
-        numTickerY=this.draw.coord.scale.y.tickers,
-        scale=this.draw.coord.scale,
-        drawbox=this.options.grid.draw.box;
+    Choopy.prototype.drawGrid = function(){
+        var x = this.options.gutter.left + .5, 
+        y = this.options.gutter.top + .5, 
+        w = this.options.width - (this.options.gutter.left + this.options.gutter.right), 
+        h = this.options.height - this.options.gutter.top - this.options.gutter.bottom;
         
-//        this.draw.grid=this.draw.paper.drawGrid(x, y, w, h, wv,scale,numTickerY,drawbox).attr({
-//            stroke: this.options.color.grid,
-//            opacity:0.3
-//        });
-
-//    
-//    
-//
-//    return this.path(path.join(","));
         var path = []
         if(this.options.grid.draw.box){
             path = path.concat(["M", Math.round(x) + .5, Math.round(y) + .5, "L", Math.round(x + w-2) + .5, Math.round(y) + .5, Math.round(x + w-2) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y) + .5]);
         }
         if(this.options.grid.draw.y){
-            rowHeight=h / this.draw.coord.scale.y.tickers
+            var rowHeight=h / this.draw.coord.scale.y.tickers
             for (var i = 0; i <= this.draw.coord.scale.y.tickers; i++) {
-                if(i<scale.y.tickers){
-                    for(var j = 0,jj=w/3;j<jj;j++){
-                        if(j%2==0 ){
+                if(i < this.draw.coord.scale.y.tickers){
+                    for(var j = 0, jj = w/3; j < jj; j++){
+                        if(j % 2 == 0 ){
                             path = path.concat(["M", x + j*3, Math.round(y + i * rowHeight) + .5, "l", 3, 0]);
                         }
                     }
@@ -710,17 +786,14 @@ var Choopy = (function(){
             }
         }
         if(this.options.grid.draw.x){
-            columnWidth=w / this.draw.coord.scale.x.tickers
             for (var i = 0; i <= this.draw.coord.scale.x.tickers; i++) {
-//                if(i>0){
-                    for(var j = 0,jj=h/3;j<jj;j++){
-                        if(j%2==0 ){
-                            path = path.concat(["M", this.draw.coord.origin.X  + this.draw.coord.scale.x.step * (i + .5), y + j*3, "l", 0, 3]);
-                        }
-                    } 
-//                }
+                for(var j = 0, jj = h/3; j < jj;j++){
+                    if(j % 2 == 0 ){
+                        path = path.concat(["M", this.draw.coord.origin.X  + this.draw.coord.scale.x.step * (i + .5), y + j*3, "l", 0, 3]);
+                    }
+                } 
             }
-//            path = path.concat(["M", x, y, "l", 0, h]);
+            path = path.concat(["M", x, y, "l", 0, h]);
         }
         
         this.draw.paper.path(path.join(',')).attr({
@@ -740,9 +813,9 @@ var Choopy = (function(){
     /**
      * Choopy.drawLabelX draw the x axis labels.
      * Data come from the data.labels.x array
-     * It set the raphael draw.sets.legend.x
+     * It set the raphael draw.sets.labels.x
      */
-    Choopy.prototype.drawLabelX             = function(){
+    Choopy.prototype.drawLabelX = function(){
     
         var labels=this.draw.paper.set();
         for (var i=0,ii=this.data.labels.x.length; i<ii ; i++){
@@ -758,17 +831,17 @@ var Choopy = (function(){
             }).attr(this.options.grid.x.legend).toBack();
             labels.push(t);
         }
-        this.draw.sets.legend.x=labels;
+        this.draw.sets.labels.x=labels;
     }
     
-    Choopy.prototype.drawLabelY             = function(){
+    Choopy.prototype.drawLabelY = function(){
     
         var minValue = this.draw.coord.scale.y.minValue,
-            maxValue = this.draw.coord.scale.y.maxValue,
-            numLabels   = this.draw.coord.scale.y.tickers,
-            rowHeight   = (this.options.height - this.options.gutter.top - this.options.gutter.bottom) / numLabels,
-            step        = (maxValue-minValue)/numLabels,
-            labels      = [];
+        maxValue = this.draw.coord.scale.y.maxValue,
+        numLabels   = this.draw.coord.scale.y.tickers,
+        rowHeight   = (this.options.height - this.options.gutter.top - this.options.gutter.bottom) / numLabels,
+        step        = (maxValue-minValue)/numLabels,
+        labels      = this.draw.paper.set();
         
         
         for (var i = 0; i <= numLabels; i++) {
@@ -786,10 +859,10 @@ var Choopy = (function(){
             labels.push(t);
         }
         
-        return labels;
+        this.draw.sets.labels.y=labels;
     }
     
-    Choopy.prototype.drawLine               = function(idSerie,color,howToScale){
+    Choopy.prototype.drawLine = function(idSerie,color,howToScale){
         var serie=this.draw.paper.set();
         var values=this.data.series[idSerie].data;
         for (var j=0,jj=values.length; j<jj ; j++){
@@ -833,7 +906,7 @@ var Choopy = (function(){
         };
     }
     
-    Choopy.prototype.joinPlots              = function(idSerie,serie){
+    Choopy.prototype.joinPlots = function(idSerie,serie){
         var pathes,p;
         //pour chaque cohort
     
@@ -868,7 +941,7 @@ var Choopy = (function(){
         return pathes;
     }
     
-    Choopy.prototype.drawColumns            = function(idSerie,color,howToScale){
+    Choopy.prototype.drawColumns = function(idSerie,color,howToScale){
         var serie=this.draw.paper.set();
         var values=this.data.series[idSerie].data;
         for (var j=0,jj=values.length; j<jj ; j++){
@@ -880,9 +953,9 @@ var Choopy = (function(){
             var yValueToZero=Math.abs(yTop-yBottom);
             var xLeft=this.draw.coord.origin.X + (xScaling.xFactor) * xScaling.xScale;
             var rect=this.draw.paper.rect(xLeft, Math.min(yTop, yBottom), xScaling.xScale-2, yValueToZero).attr({
-                fill:color,
-                stroke:color,
-                'stroke-width':0
+                fill: color,
+                stroke: color,
+                'stroke-width': 0
             });
             
             serie.push(rect);
@@ -911,7 +984,7 @@ var Choopy = (function(){
         return serie;
     }
 
-    Choopy.prototype.drawTooltipForPlot     = function(plot,x,y){
+    Choopy.prototype.drawTooltipForPlot = function(plot,x,y){
         var ppp,textLabel;
     
         textLabel=this.draw.paper.set();
@@ -975,7 +1048,7 @@ var Choopy = (function(){
         
     }
     
-    Choopy.prototype.drawTooltipForColumn   = function(column,x,y){
+    Choopy.prototype.drawTooltipForColumn = function(column,x,y){
         
         var ppp,textLabel;
     
@@ -1037,7 +1110,7 @@ var Choopy = (function(){
         
     }
 
-    Choopy.prototype.fillPathes             = function(){
+    Choopy.prototype.fillPathes = function(){
         var zero=this.draw.coord.origin.Y+(this.draw.coord.scale.y.step * (this.draw.coord.scale.y.maxValue-0))+1.5;
 
         for(var i=0;i<this.draw.sets.pathes.length;i++ ){
@@ -1065,7 +1138,7 @@ var Choopy = (function(){
     
     }
     
-    Choopy.prototype.sortSeries             = function(){
+    Choopy.prototype.sortSeries = function(){
         var s=this.draw.sets.series;
         var sP=this.draw.sets.pathes;
 
@@ -1100,7 +1173,7 @@ var Choopy = (function(){
         
     }
     
-    Choopy.prototype.drawTransverses        = function(){
+    Choopy.prototype.drawTransverses = function(){
         var p;
      
         for(i=0;i<this.draw.sets.transverses.length;i++){
@@ -1129,40 +1202,62 @@ var Choopy = (function(){
         
     }
     
-    Choopy.prototype.hover                  = function(elem){
-        var self=this;
+    Choopy.prototype.hover = function(elem){
+        var self = this;
         elem.hover(function(){
        
-            if(this.type=='circle'){
-                this.attr('r',self.options.graph.dot.hover);
+            if(this.type == 'circle'){
+                this.attr('r', self.options.graph.dot.hover);
                 self.draw.tooltips[this.id].show().toFront();
             }
-            if(this.type=='rect'){
-                this.attr('fill-opacity',0.7);
+            if(this.type == 'rect'){
+                this.attr('fill-opacity', 0.7);
                 self.draw.tooltips[this.id].show().toFront();
             }
         },function(){
         
-            if(this.type=='circle'){
-                this.attr('r',self.options.graph.dot.normal);
+            if(this.type == 'circle'){
+                this.attr('r', self.options.graph.dot.normal);
                 self.draw.tooltips[this.id].hide();
             }
-            if(this.type=='rect'){
-                this.attr('fill-opacity',1);
+            if(this.type == 'rect'){
+                this.attr('fill-opacity', 1);
                 self.draw.tooltips[this.id].hide();
             }
         })
     }
     
+    Choopy.prototype.clickLegend = function(elem){
+        var self = this;
+        
+        elem.click(function(){
+            var serieID = self.draw.matrice[this.id].serieSetId;
+            if(self.draw.sets.series[serieID][0].node.style.display == 'none'){
+                self.draw.sets.legend[serieID][0].attr({
+                    fill: self.draw.sets.legend[serieID][0]._realColor
+                    })
+                self.draw.sets.series[serieID].show();
+                self.draw.sets.pathes[serieID].show();
+            }else{
+                self.draw.sets.legend[serieID][0].attr({
+                    fill: "#AAA"
+                })    
+                self.draw.sets.series[serieID].hide();
+                self.draw.sets.pathes[serieID].hide();
+            }
+           
+        })
+    }
+    
     Choopy.prototype.utils={
-        trim:function (str) {
+        trim: function (str) {
             var	str = str.replace(/^\s\s*/, ''),
             ws = /\s/,
             i = str.length;
             while (ws.test(str.charAt(--i)));
             return str.slice(0, i + 1);
         },
-        extend:function(a,b){
+        extend: function(a,b){
             for (var property in b){
                 if(a[property]){
                     if(Object.prototype.toString.call(b[property]) == '[object Object]'){
@@ -1176,7 +1271,7 @@ var Choopy = (function(){
             }
             return this.clone(a);
         },
-        clone :function clone(srcInstance){
+        clone: function clone(srcInstance){
             if(typeof(srcInstance) != 'object' || srcInstance == null){
                 return srcInstance;
             }
@@ -1186,9 +1281,6 @@ var Choopy = (function(){
             }
             return newInstance;
         },
-        
-       
-
         roundToPrecision: function(x, precision) {
             var exp = Math.pow(10, precision);
             return Math.round(x * exp) / exp;
@@ -1252,12 +1344,23 @@ var Choopy = (function(){
         }
     }
   
-    Choopy.prototype.defaultOptions={
+    Choopy.prototype.defaultOptions = {
         data:'',                                // an array of series or an id related to an html table
         container:'',                           // id of the div which will be contains your graph
-        width:640,                                // width of your container
-        height:400,                               // height of your container
-        auto_adjust:false,
+        width:640,                              // width of your container
+        height:400,                             // height of your container
+        auto_adjust:false,                      // if you prefer set the container size in your css
+        legend:{
+            display:'top',
+            render: function(string){
+                return {
+                    font: '10px Helvetica, Arial', 
+                    fill: "#333",
+                    'font-weight':'bold',
+                    text:string
+                };
+            }
+        },
         offset:{                                // offset is to take off the chart from axis
             top:20,         
             right:20,
@@ -1316,7 +1419,7 @@ var Choopy = (function(){
             draw:{      
                 box:false,                      // draw a bow around your graph
                 y:true,                         // draw horizontal lines
-                x:false                          // draw vertical lines
+                x:false                         // draw vertical lines
             }
             
         },
@@ -1346,8 +1449,8 @@ var Choopy = (function(){
                 }
             },
             legend:{
-                    font: '12px Helvetica, Arial', 
-                    fill: "#fff"
+                font: '12px Helvetica, Arial', 
+                fill: "#fff"
             }
         },
         tooltip:function(data,x,y){             // customize the value shown on your tooltips
