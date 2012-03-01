@@ -37,10 +37,15 @@ Raphael.fn.drawGrid = function (x, y, w, h, wv,scale,drawbox) {
 
 
 Raphael.el.isAbsolute=!0;
+Raphael.el._realColor=null;
 
 Raphael.el._last={
     x:0,
     y:0
+};
+Raphael.el.setRealColor=function(color){
+    this._realColor=color;
+    return this;
 };
 Raphael.el.absolutely=function(){
     this.isAbsolute=1;
@@ -307,8 +312,6 @@ var Choopy = (function(){
         this.options=this.utils.extend(this.options,options);
     }
 
-
-
     /**
      * Choopy.parse takes data from this.options.data.
      * If an array is given, it should contains all series (even one called "legend" which contains the x axis labels)
@@ -500,7 +503,7 @@ var Choopy = (function(){
     
         //scaling
         var maxValue = this.data.series[0].data[0],
-            minValue;
+        minValue;
             
             
         if(this.options.grid.y.startAt !== false){
@@ -543,11 +546,11 @@ var Choopy = (function(){
             // Inspired by:
             // http://books.google.com/books?id=fvA7zLEFWZgC&pg=PA61&lpg=PA61#v=onepage&q&f=false
             var range       = minValue == maxValue ? this.utils.niceNumber(Math.abs(maxValue), false) : this.utils.niceNumber(maxValue - minValue, false),
-                d           = this.utils.niceNumber(range / (this.options.grid.y.range ), true),
-                precision   = Math.max((-Math.floor(Math.LOG10E * Math.log(d))), 0),
-                graphmin    = this.utils.floorToPrecision(minValue / d , precision) * d,
-                margin      = this.utils.roundToPrecision(this.utils.niceNumber(0.5 * d, true), precision),
-                step        = this.utils.roundToPrecision(d, precision);
+            d           = this.utils.niceNumber(range / (this.options.grid.y.range ), true),
+            precision   = Math.max((-Math.floor(Math.LOG10E * Math.log(d))), 0),
+            graphmin    = this.utils.floorToPrecision(minValue / d , precision) * d,
+            margin      = this.utils.roundToPrecision(this.utils.niceNumber(0.5 * d, true), precision),
+            step        = this.utils.roundToPrecision(d, precision);
            
             // Add some headroom to the bottom
             if (minValue < 0) {
@@ -589,40 +592,72 @@ var Choopy = (function(){
 
     Choopy.prototype.drawLegend = function (){
         var legendSet = this.draw.paper.set(),
-            currentX = this.options.gutter.left + .5,
-            currentY = this.options.gutter.top + .5;
+        currentX = this.options.gutter.left + .5,
+        currentY = this.options.gutter.top + .5;
         
         for (var i = 0, ii = this.data.countSerie; i < ii ; i++){
+            
             var itemSet = this.draw.paper.set(),
                 currentColor = this.options.color.serie[i%this.options.color.serie.length];
+                
+            // the small rect with the color of the serie    
             var rect=this.draw.paper.rect(currentX,currentY,15,15,5).attr({
                 fill: currentColor,
                 stroke: currentColor,
-                'stroke-width': 0
-            }).click(function(){
-                
-            });
+                'stroke-width': 0,
+                'stroke-opacity': 0
+            }).setRealColor(currentColor);
             
-             this.draw.matrice[rect.id]={
+            // we add it to the matrice to get back easily the serie id with the raphael element id
+            this.draw.matrice[rect.id]={
                 id:rect.id,
                 serieSetId:i
             };
             
+            // the cursor move right
             currentX += 20+5;
-            var text=this.draw.paper.text(currentX,currentY+10).attr({'text-anchor':'start'}).attr(this.options.legend.render(this.data.series[i].name));
+            
+            // the legend itself
+            var text=this.draw.paper.text(currentX,currentY+10).attr({
+                'text-anchor':'start'
+            }).attr(this.options.legend.render(this.data.series[i].name));
+            
+            // added to the matrice
+            this.draw.matrice[text.id]={
+                id:text.id,
+                serieSetId:i
+            };
+            
+            // cursor to the right
             currentX += text.getBBox().width+10;
+            
+            // itemset populated (with one rect and one serie name
             itemSet.push(rect)
             itemSet.push(text)
+            
+            // click event binded to the legend item set
             this.clickLegend(itemSet)
+            
+            // if we the legend is too large, we split it in a new line
+            if(currentX >= (this.options.width-this.options.gutter.left-this.options.gutter.right)){
+                currentY += 25;
+                currentX = this.options.gutter.left + .5;
+            }
+            
+            // itemset push on the legendset
             legendSet.push(itemSet)
         }
-        console.log(this.options.gutter.top)
-        console.log(legendSet.getBBox().height)
-        console.log(this.options.gutter.top)
+        
+        // if the legend is higher than the top gutter, we extend the top gutter
         if(legendSet.getBBox().height >= this.options.gutter.top){
             this.options.gutter.top = legendSet.getBBox().height+15;
         }
         
+        // and we center the legend horizontaly
+        legendSet.translate((this.options.width-this.options.gutter.left-this.options.gutter.right-legendSet.getBBox().width)/2, 0)
+        
+        // and assign it to Choopy
+        this.draw.sets.legend = legendSet;
     }
 
 
@@ -632,9 +667,9 @@ var Choopy = (function(){
      */
     Choopy.prototype.drawGrid = function(){
         var x = this.options.gutter.left + .5, 
-            y = this.options.gutter.top + .5, 
-            w = this.options.width - (this.options.gutter.left + this.options.gutter.right), 
-            h = this.options.height - this.options.gutter.top - this.options.gutter.bottom;
+        y = this.options.gutter.top + .5, 
+        w = this.options.width - (this.options.gutter.left + this.options.gutter.right), 
+        h = this.options.height - this.options.gutter.top - this.options.gutter.bottom;
         
         var path = []
         if(this.options.grid.draw.box){
@@ -656,11 +691,11 @@ var Choopy = (function(){
         }
         if(this.options.grid.draw.x){
             for (var i = 0; i <= this.draw.coord.scale.x.tickers; i++) {
-                    for(var j = 0, jj = h/3; j < jj;j++){
-                        if(j % 2 == 0 ){
-                            path = path.concat(["M", this.draw.coord.origin.X  + this.draw.coord.scale.x.step * (i + .5), y + j*3, "l", 0, 3]);
-                        }
-                    } 
+                for(var j = 0, jj = h/3; j < jj;j++){
+                    if(j % 2 == 0 ){
+                        path = path.concat(["M", this.draw.coord.origin.X  + this.draw.coord.scale.x.step * (i + .5), y + j*3, "l", 0, 3]);
+                    }
+                } 
             }
             path = path.concat(["M", x, y, "l", 0, h]);
         }
@@ -706,11 +741,11 @@ var Choopy = (function(){
     Choopy.prototype.drawLabelY = function(){
     
         var minValue = this.draw.coord.scale.y.minValue,
-            maxValue = this.draw.coord.scale.y.maxValue,
-            numLabels   = this.draw.coord.scale.y.tickers,
-            rowHeight   = (this.options.height - this.options.gutter.top - this.options.gutter.bottom) / numLabels,
-            step        = (maxValue-minValue)/numLabels,
-            labels      = this.draw.paper.set();
+        maxValue = this.draw.coord.scale.y.maxValue,
+        numLabels   = this.draw.coord.scale.y.tickers,
+        rowHeight   = (this.options.height - this.options.gutter.top - this.options.gutter.bottom) / numLabels,
+        step        = (maxValue-minValue)/numLabels,
+        labels      = this.draw.paper.set();
         
         
         for (var i = 0; i <= numLabels; i++) {
@@ -728,7 +763,7 @@ var Choopy = (function(){
             labels.push(t);
         }
         
-       this.draw.sets.labels.y=labels;
+        this.draw.sets.labels.y=labels;
     }
     
     Choopy.prototype.drawLine = function(idSerie,color,howToScale){
@@ -1072,40 +1107,45 @@ var Choopy = (function(){
     }
     
     Choopy.prototype.hover = function(elem){
-        var self=this;
+        var self = this;
         elem.hover(function(){
        
-            if(this.type=='circle'){
-                this.attr('r',self.options.graph.dot.hover);
+            if(this.type == 'circle'){
+                this.attr('r', self.options.graph.dot.hover);
                 self.draw.tooltips[this.id].show().toFront();
             }
-            if(this.type=='rect'){
-                this.attr('fill-opacity',0.7);
+            if(this.type == 'rect'){
+                this.attr('fill-opacity', 0.7);
                 self.draw.tooltips[this.id].show().toFront();
             }
         },function(){
         
-            if(this.type=='circle'){
-                this.attr('r',self.options.graph.dot.normal);
+            if(this.type == 'circle'){
+                this.attr('r', self.options.graph.dot.normal);
                 self.draw.tooltips[this.id].hide();
             }
-            if(this.type=='rect'){
-                this.attr('fill-opacity',1);
+            if(this.type == 'rect'){
+                this.attr('fill-opacity', 1);
                 self.draw.tooltips[this.id].hide();
             }
         })
     }
+    
     Choopy.prototype.clickLegend = function(elem){
-        var self=this;
+        var self = this;
         
         elem.click(function(){
-            var serieID=self.draw.matrice[this.id].serieSetId;
+            var serieID = self.draw.matrice[this.id].serieSetId;
             if(self.draw.sets.series[serieID][0].node.style.display == 'none'){
-                    
+                self.draw.sets.legend[serieID][0].attr({
+                    fill: self.draw.sets.legend[serieID][0]._realColor
+                    })
                 self.draw.sets.series[serieID].show();
                 self.draw.sets.pathes[serieID].show();
             }else{
-                    
+                self.draw.sets.legend[serieID][0].attr({
+                    fill: "#AAA"
+                })    
                 self.draw.sets.series[serieID].hide();
                 self.draw.sets.pathes[serieID].hide();
             }
@@ -1218,11 +1258,11 @@ var Choopy = (function(){
             display:'top',
             render: function(string){
                 return {
-                            font: '10px Helvetica, Arial', 
-                            fill: "#333",
-                            'font-weight':'bold',
-                            text:string
-                        };
+                    font: '10px Helvetica, Arial', 
+                    fill: "#333",
+                    'font-weight':'bold',
+                    text:string
+                };
             }
         },
         offset:{                                // offset is to take off the chart from axis
@@ -1313,8 +1353,8 @@ var Choopy = (function(){
                 }
             },
             legend:{
-                    font: '12px Helvetica, Arial', 
-                    fill: "#fff"
+                font: '12px Helvetica, Arial', 
+                fill: "#fff"
             }
         },
         tooltip:function(data,x,y){             // customize the value shown on your tooltips
