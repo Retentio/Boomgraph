@@ -66,11 +66,9 @@
                 </div>
                 <div class="row">
                     <div class="span3 columns">
-                        <h3>About Boomgraph.js</h3>
                         <p></p>
                     </div>
                     <div class="span9 columns">
-                        <h2>How it works</h2>
                         <p>Boomgraph is based on Raphael. Since Raphael is "just" to handle SVG easily, Boomgraph use a core object called Choopy.</p>
                         <p>Choopy is the common factor between each chart. It exposes primitives to parse data, draw plots/line/area/bar/grid, manage labels and so on.</p>
                         <p>Each chart provided by Boomgraph is on top of these primitives. They allow you to extend easily Boomgraph and create the chart you dream of!</p>
@@ -103,22 +101,119 @@
                 <div class="row">
                     <div class="span3 columns">
                         <p>Create a line chart with one or more series of data.</p>
-                        <a href="https://raw.github.com/Retentio/Boomgraph/master/src/Line.js" target="_blank" class="btn">Download file</a>
+                        <a href="#" class="btn" data-toggle="collapse" data-target="#container-data-line">See data</a>
+                        <a href="#modal-code-line" class="btn btn-info" data-toggle="modal">See code</a>
+                        <a href="https://raw.github.com/Retentio/Boomgraph/master/src/Line.js" target="_blank" class="btn btn-primary">Download file</a>
                     </div>
                     <div class="span9 columns">
-                        <h2>Example</h2>
-                        <div id="boomgraph-container-line" class="big-chart">
 
+                        <div id="container-data-line" class="collapse">
+                            <table id="data-line" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Month of signup</th>
+                                        <th>
+                                            Month 1
+                                        </th>
+                                        <th>
+                                            Month 2
+                                        </th>
+                                        <th>
+                                            Month 3
+                                        </th>
+                                        <th>
+                                            Month 4
+                                        </th>
+                                        <th>
+                                            Month 5
+                                        </th>
+                                        <th>
+                                            Month 6
+                                        </th>
+                                        <th>
+                                            Month 7
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>08/2011</td>
+                                        <td>26</td>
+                                        <td>23</td>
+                                        <td>21</td>
+                                        <td>17</td>
+                                        <td>15</td>
+                                        <td>16</td>
+                                        <td>15</td>
+                                    </tr>
+                                    <tr>
+                                        <td>09/2011</td>
+                                        <td>28</td>
+                                        <td>24</td>
+                                        <td>24</td>
+                                        <td>22</td>
+                                        <td>18</td>
+                                        <td>17</td>
+                                        <td>14</td>
+                                    </tr>
+                                    <tr>
+                                        <td>10/2011</td>
+                                        <td>29</td>
+                                        <td>26</td>
+                                        <td>23</td>
+                                        <td>19</td>
+                                        <td>19</td>
+                                        <td>18</td>
+                                        <td>15</td>
+                                    </tr>
+                                    <tr>
+                                        <td>11/2011</td>
+                                        <td>31</td>
+                                        <td>28</td>
+                                        <td>23</td>
+                                        <td>20</td>
+                                        <td>21</td>
+                                        <td>20</td>
+                                        <td>18</td>
+                                    </tr>
+                                    <tr>
+                                        <td>12/2011</td>
+                                        <td>33</td>
+                                        <td>28</td>
+                                        <td>26</td>
+                                        <td>25</td>
+                                        <td>23</td>
+                                        <td>21</td>
+                                        <td>18</td>
+                                    </tr>
+                                    <tr>
+                                        <td>01/2012</td>
+                                        <td>35</td>
+                                        <td>33</td>
+                                        <td>31</td>
+                                        <td>30</td>
+                                        <td>27</td>
+                                        <td>24</td>
+                                        <td>21</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div id="boomgraph-container-line" class="big-chart">
                         </div>
 
 
                         <hr>
                         <h2>Using Line.js</h2>
                         <p>Define at least your data and a container:</p>
-                        <pre class="prettyprint linenums">var options={
-                data:'mySweetData' //an id or an array,
-                container:'putMyChartHere' // an id
-          }</pre>
+                        <pre class="prettyprint linenums">
+var options={
+    data:'mySweetData' //an id or an array,
+    container:'putMyChartHere' // an id
+}
+                        </pre>
                         <h3>Call Line.js</h3>
                         <p>Just create an instance of <code>Line</code> with your options</p>
                         <pre class="prettyprint linenums">
@@ -139,21 +234,60 @@ myLineChart = new Line(options);
                 <div class="row">
                     <div class="span3 columns">
                         <p>Create an area chart with one or more series of data.</p>
-                        <a href="https://raw.github.com/Retentio/Boomgraph/master/src/Area.js" target="_blank" class="btn">Download file</a>
+                        <a href="#" class="btn" data-toggle="collapse" data-target="#container-data-area">See data</a>
+                        <a href="#modal-code-area" class="btn btn-info" data-toggle="modal">See code</a>
+                        <a href="https://raw.github.com/Retentio/Boomgraph/master/src/Area.js" target="_blank" class="btn btn-primary">Download file</a>
                     </div>
                     <div class="span9 columns">
-                        <h2>Example</h2>
-                        <div id="boomgraph-container-area" class="big-chart">
+                        
+                        <div id="container-data-area" class="collapse">
+                            <pre class="prettyprint linenums">
+var dataArea=[{
+        name: 'USA',
+        data: [null, null, null, null, null, 6 , 11, 32, 110, 235, 369, 640,
+            1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468, 20434, 24126,
+            27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342, 26662,
+            26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 24605,
+            24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586,
+            22380, 21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950,
+            10871, 10824, 10577, 10527, 10475, 10421, 10358, 10295, 10104 ]
+    }, {
+        name: 'USSR/Russia',
+        data: [null, null, null, null, null, null, null , null , null ,null,
+            5, 25, 50, 120, 150, 200, 426, 660, 869, 1060, 1605, 2471, 3322,
+            4238, 5221, 6129, 7089, 8339, 9399, 10538, 11643, 13092, 14478,
+            15915, 17385, 19055, 21205, 23044, 25393, 27935, 30062, 32049,
+            33952, 35804, 37431, 39197, 45000, 43000, 41000, 39000, 37000,
+            35000, 33000, 31000, 29000, 27000, 25000, 24000, 23000, 22000,
+            21000, 20000, 19000, 18000, 18000, 17000, 16000]
+    }]
 
+var xLabels={           // x-labels are created with a function
+    name: 'x-label',
+    data: function(){
+        labels=[];
+        for (var i = 0, ii = dataArea[0].data.length; i < ii; i++){
+            labels.push(1940+i)
+        }
+        return labels;
+    }
+}
+dataArea.push(xLabels);
+                            </pre>
+                        </div>
+                        
+                        <div id="boomgraph-container-area" class="big-chart">
                         </div>
 
                         <hr>
                         <h2>Using Area.js</h2>
                         <p>Define at least your data and a container:</p>
-                        <pre class="prettyprint linenums">var options={
-                data:'mySweetData' //an id or an array,
-                container:'putMyChartHere' // an id
-          }</pre>
+                        <pre class="prettyprint linenums">
+var options={
+    data:'mySweetData' //an id or an array,
+    container:'putMyChartHere' // an id
+}
+                        </pre>
                         <h3>Call Area.js</h3>
                         <p>Just create an instance of <code>Area</code> with your options</p>
                         <pre class="prettyprint linenums">
@@ -174,10 +308,45 @@ myAreaChart = new Area(options);
                 <div class="row">
                     <div class="span3 columns">
                         <p>Create a vertical bar chart with one or more series of data.</p>
-                        <a href="https://raw.github.com/Retentio/Boomgraph/master/src/Bar.js" target="_blank" class="btn">Download file</a>
+                        <a href="#" class="btn" data-toggle="collapse" data-target="#container-data-bar">See data</a>
+                        <a href="#modal-code-bar" class="btn btn-info" data-toggle="modal">See code</a>
+                        <a href="https://raw.github.com/Retentio/Boomgraph/master/src/Bar.js" target="_blank" class="btn btn-primary">Download file</a>
                     </div>
                     <div class="span9 columns">
-                        <h2>Example</h2>
+
+                        <div id="container-data-bar" class="collapse">
+                            <table id="data-bar" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Month</th>
+                                        <th>January</th>
+                                        <th>February</th>
+                                        <th>March</th>
+                                        <th>April</th>
+                                        <th>May</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Benefits</td>
+                                        <td>8000</td>
+                                        <td>12000</td>
+                                        <td>18000</td>
+                                        <td>2000</td>
+                                        <td>500</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sales</td>
+                                        <td>2000</td>
+                                        <td>3000</td>
+                                        <td>4000</td>
+                                        <td>-1000</td>
+                                        <td>-2500</td>
+                                    </tr>
+                                   
+                                </tbody>
+                            </table>
+                        </div>
                         <div id="boomgraph-container-bar" class="big-chart">
 
                         </div>
@@ -530,108 +699,141 @@ Choopy.prototype.defaultOptions={
             <footer class="footer">
                 <p class="pull-right"><a href="#">Back to top</a></p>
                 <p>Designed and built at <a href="http://retent.io/" target="_blank">Retentio</a> (<a href="http://twitter.com/retentio" target="_blank">@retentio</a>) by <a href="http://twitter.com/antoineguiral" target="_blank">@antoineguiral</a>.</p>
-                <p>Code licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+                <p>Code licensed under the <a href="https://raw.github.com/Retentio/Boomgraph/master/LICENCE" target="_blank">MIT Licence</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
             </footer>
 
         </div><!-- /container -->
 
 
-        <!-- Fixture
-        ================================================== -->
-        <div style="display:none">
-            <table id="fixture">
-                <thead>
-                    <tr>
-                        <th>Month of signup</th>
-                        <th>
-                            Month 1
-                        </th>
-                        <th>
-                            Month 2
-                        </th>
-                        <th>
-                            Month 3
-                        </th>
-                        <th>
-                            Month 4
-                        </th>
-                        <th>
-                            Month 5
-                        </th>
-                        <th>
-                            Month 6
-                        </th>
-                        <th>
-                            Month 7
-                        </th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>08/2011</td>
-                        <td>26</td>
-                        <td>23</td>
-                        <td>21</td>
-                        <td>17</td>
-                        <td>15</td>
-                        <td>16</td>
-                        <td>15</td>
-                    </tr>
-                    <tr>
-                        <td>09/2011</td>
-                        <td>28</td>
-                        <td>24</td>
-                        <td>24</td>
-                        <td>22</td>
-                        <td>18</td>
-                        <td>17</td>
-                        <td>14</td>
-                    </tr>
-                    <tr>
-                        <td>10/2011</td>
-                        <td>29</td>
-                        <td>26</td>
-                        <td>23</td>
-                        <td>19</td>
-                        <td>19</td>
-                        <td>18</td>
-                        <td>15</td>
-                    </tr>
-                    <tr>
-                        <td>11/2011</td>
-                        <td>31</td>
-                        <td>28</td>
-                        <td>23</td>
-                        <td>20</td>
-                        <td>21</td>
-                        <td>20</td>
-                        <td>18</td>
-                    </tr>
-                    <tr>
-                        <td>12/2011</td>
-                        <td>33</td>
-                        <td>28</td>
-                        <td>26</td>
-                        <td>25</td>
-                        <td>23</td>
-                        <td>21</td>
-                        <td>18</td>
-                    </tr>
-                    <tr>
-                        <td>01/2012</td>
-                        <td>35</td>
-                        <td>33</td>
-                        <td>31</td>
-                        <td>30</td>
-                        <td>27</td>
-                        <td>24</td>
-                        <td>21</td>
-                    </tr>
-                </tbody>
-            </table>
+
+        <!-- Les modals
+        ================================================== -->
+
+        <div class="modal fade" id="modal-code-line">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3>Javascript source code</h3>
+            </div>
+            <div class="modal-body">
+                <pre class="prettyprint linenums">
+        options={
+            data:'data-line',
+            container:'boomgraph-container-line',
+            auto_adjust:true,
+            grid:{
+                draw:{
+                    x:true
+                }
+            }
+        }
+
+        new Line(options);
+                </pre>
+            </div>
+            <div class="modal-footer">
+                <a href="#" data-dismiss="modal" class="btn btn-primary">Close</a>
+            </div>
         </div>
 
+        <div class="modal fade" id="modal-code-area">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3>Javascript source code</h3>
+            </div>
+            <div class="modal-body">
+                <pre class="prettyprint linenums">
+       
+var dataArea=[{
+        name: 'USA',
+        data: [null, null, ... , 24304, 23464]
+    }, {
+        name: 'USSR/Russia',
+        data: [null, null, ... ,32049, 33952]
+    }]
+
+var xLabels={
+    name: 'x-label',
+    data: function(){
+        labels=[];
+        for (var i = 0, ii = dataArea[0].data.length; i < ii; i++){
+            labels.push(1940+i)
+        }
+        return labels;
+    }
+}
+
+dataArea.push(xLabels);
+
+options={
+    data:dataArea,
+    container:'boomgraph-container-area',
+    auto_adjust:true,
+    grid: {
+        x:{
+            labels:{
+                ticker: 3
+            },
+            legend:{
+                text:'Year'
+            }
+        },
+        y:{
+            labels:{
+                render:function(string){ 
+                    return {
+                        font: '10px Helvetica, Arial',
+                        fill: "#333",
+                        text: Math.round(string/1000)+'k'
+                    };
+                }
+            },
+            legend:{
+                text:'Nuclear weapon state'
+            }
+        }
+    }
+}
+new Area(options);
+                </pre>
+            </div>
+            <div class="modal-footer">
+                <a href="#" data-dismiss="modal" class="btn btn-primary">Close</a>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modal-code-bar">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3>Javascript source code</h3>
+            </div>
+            <div class="modal-body">
+                <pre class="prettyprint linenums">
+options={
+    data:'data-bar',
+    container:'boomgraph-container-bar',
+    auto_adjust:true,
+    gutter:{
+        right:0
+    },
+    grid:{
+        draw:{
+            box: true,
+            y: false
+        }
+    },
+    legend:{
+        display:null
+    }
+}
+
+new Bar(options);
+                </pre>
+            </div>
+            <div class="modal-footer">
+                <a href="#" data-dismiss="modal" class="btn btn-primary">Close</a>
+            </div>
+        </div>
 
 
         <!-- Le javascript
@@ -640,79 +842,132 @@ Choopy.prototype.defaultOptions={
         <script>
             window.onload = function () {
                 options={
-                    data:'fixture',
+                    data:'data-line',
                     container:'boomgraph-container-line',
                     auto_adjust:true,
-                    gutter:{
-                        right:0
-                    },
                     grid:{
                         draw:{
                             x:true
                         }
                     }
                 }
-                    new Line(options);
-                    options={
-                        data:'fixture',
-                        container:'boomgraph-container-area',
-                        auto_adjust:true,
-                        gutter:{
-                            right:0
-                        },
-                        legend:{
-                            display:'right'
+                new Line(options);
+                
+                var dataArea=[{
+                        name: 'USA',
+                        data: [null, null, null, null, null, 6 , 11, 32, 110, 235, 369, 640,
+                            1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468, 20434, 24126,
+                            27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342, 26662,
+                            26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 24605,
+                            24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586,
+                            22380, 21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950,
+                            10871, 10824, 10577, 10527, 10475, 10421, 10358, 10295, 10104 ]
+                    }, {
+                        name: 'USSR/Russia',
+                        data: [null, null, null, null, null, null, null , null , null ,null,
+                            5, 25, 50, 120, 150, 200, 426, 660, 869, 1060, 1605, 2471, 3322,
+                            4238, 5221, 6129, 7089, 8339, 9399, 10538, 11643, 13092, 14478,
+                            15915, 17385, 19055, 21205, 23044, 25393, 27935, 30062, 32049,
+                            33952, 35804, 37431, 39197, 45000, 43000, 41000, 39000, 37000,
+                            35000, 33000, 31000, 29000, 27000, 25000, 24000, 23000, 22000,
+                            21000, 20000, 19000, 18000, 18000, 17000, 16000]
+                    }]
+                    
+                var xLabels={
+                    name: 'x-label',
+                    data: function(){
+                        labels=[];
+                        for (var i = 0, ii = dataArea[0].data.length; i < ii; i++){
+                            labels.push(1940+i)
                         }
+                        return labels;
                     }
-                    new Area(options);
-                    options={
-                        data:'fixture',
-                        container:'boomgraph-container-bar',
-                        auto_adjust:true,
-                        gutter:{
-                            right:0
-                        },
-                        grid:{
-                            draw:{
-                                box:true
+                }
+                dataArea.push(xLabels);
+                
+                
+                options={
+                    data:dataArea,
+                    container:'boomgraph-container-area',
+                    auto_adjust:true,
+                    grid: {
+                        x:{
+                            labels:{
+                                ticker: 3
+                            },
+                            legend:{
+                                text:'Year'
                             }
                         },
-                        legend:{
-                            display:null
+                        y:{
+                            labels:{
+                                render:function(string){ 
+                                    label=Math.round(string/1000)+'k';
+                                    return {
+                                        font: '10px Helvetica, Arial',
+                                        fill: "#333",
+                                        text: label
+                                    };
+                                }
+                            },
+                            legend:{
+                                text:'Nuclear weapon state'
+                            }
                         }
                     }
-                    new Bar(options);
-            
-                    options={
-                        data:[{name:'mySerie',data:[1,2,0,1,3,4,5,6,5,4,8,5,4,8,5]}],
-                        container:'boomgraph-container-sparkline',
-                        width:200,
-                        height:50
-                    }
-                    new Sparkline(options)
-            
-                    options={
-                        data:[{name:'mySerie',data:[1,2,0,1,3,4,5,6,5,4,8,5,4,8,5]}],
-                        container:'boomgraph-container-sparkbar',
-                        width:200,
-                        height:50,
-                        color :{
-                            serie:['#CC33CC']
-                        }
-                    }
-                    new Sparkbar(options)
-            
-                    options={
-                        data:[{name:'mySerie',data:[1,2,0,1,3,4,5,6,5,4,8,5,4,8,5]}],
-                        container:'boomgraph-container-sparkarea',
-                        width:200,
-                        height:50,
-                        color :{
-                            serie:['#A2CC06']
-                        }
-                    }
-                    new Sparkarea(options)
                 }
+                new Area(options);
+                
+                
+                options={
+                    data:'data-bar',
+                    container:'boomgraph-container-bar',
+                    auto_adjust:true,
+                    gutter:{
+                        right:0
+                    },
+                    grid:{
+                        draw:{
+                            box: true,
+                            x: false
+                        }
+                    },
+                    legend:{
+                        display:null
+                    }
+                }
+                new Bar(options);
+            
+                options={
+                    data:[{name:'mySerie',data:[1,2,0,1,3,4,5,6,5,4,8,5,4,8,5]}],
+                    container:'boomgraph-container-sparkline',
+                    width:200,
+                    height:50
+                }
+                new Sparkline(options)
+            
+                options={
+                    data:[{name:'mySerie',data:[1,2,0,1,3,4,5,6,5,4,8,5,4,8,5]}],
+                    container:'boomgraph-container-sparkbar',
+                    width:200,
+                    height:50,
+                    color :{
+                        serie:['#CC33CC']
+                    }
+                }
+                new Sparkbar(options)
+            
+                options={
+                    data:[{name:'mySerie',data:[1,2,0,1,3,4,5,6,5,4,8,5,4,8,5]}],
+                    container:'boomgraph-container-sparkarea',
+                    width:200,
+                    height:50,
+                    color :{
+                        serie:['#A2CC06']
+                    }
+                }
+                new Sparkarea(options)
+            }
         </script>
 
         <!-- Placed at the end of the document so the pages load faster -->
@@ -723,21 +978,22 @@ Choopy.prototype.defaultOptions={
         <script src="doc/js/bootstrap-scrollspy.js"></script>
         <script src="doc/js/bootstrap-tab.js"></script>
         <script src="doc/js/bootstrap-collapse.js"></script>
+        <script src="doc/js/bootstrap-modal.js"></script>
 
 
         <script src="doc/js/doc.js"></script>
         <script src="vendor/Raphael.js"></script>
         <script src="Boomgraph.min.js"></script>
         <script>
-                var _gaq = _gaq || [];
-                _gaq.push(['_setAccount', 'UA-29439398-1']);
-                _gaq.push(['_trackPageview']);
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-29439398-1']);
+            _gaq.push(['_trackPageview']);
 
-                (function() {
-                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-                })();
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
 
         </script>
 
