@@ -665,7 +665,12 @@ var Choopy = (function(){
                 graphmin = this.utils.roundToOrigin(graphmin, 1);
             }
             
-            scaleY.maxValue=graphmin
+            if(scaleY.maxValue >= 0 && scaleY.minValue <= 0){
+                scaleY.maxValue=0
+            }else{
+                scaleY.maxValue=graphmin
+            }
+            
             while(scaleY.maxValue<=maxValue){
                 scaleY.maxValue += step;
             }
