@@ -46,7 +46,6 @@
             <div class="subnav">
                 <ul class="nav nav-pills">
                     <li><a href="#concept">Concept</a></li>
-                    <li><a href="#options">Options</a></li>
                     <li><a href="#line">Line</a></li>
                     <li><a href="#area">Area</a></li>
                     <li><a href="#bar">Bar</a></li>
@@ -54,6 +53,7 @@
                     <li><a href="#sparkarea">Sparkarea</a></li>
                     <li><a href="#sparkbar">Sparkbar</a></li>
                     <li><a href="#choopy">Choopy</a></li>
+                    <li><a href="#options">Options</a></li>
                 </ul>
             </div>
 
@@ -91,160 +91,6 @@
 
 
 
-            <!-- Options
-             ================================================== -->
-            <section id="scrollspy">
-                <div class="page-header">
-                    <h1>Options</h1>
-                </div>
-                <div class="row">
-                    <div class="span3 columns">
-                        <h3>Customize your charts!</h3>
-                        <p>Almost everything is customizable to fit your needs.</p>
-                    </div>
-                    <div class="span9 columns">
-                        <h2>Details</h2>
-                        <p>This is how you can customize your graph.</p>
-                        <h3>Default options</h3>
-                        <pre class="prettyprint linenums">
-Choopy.prototype.defaultOptions={
-        data:'',                                // an array of series or an id related to an html table
-        container:'',                           // id of the div which will be contains your graph
-        width:640,                              // width of your container
-        height:400,                             // height of your container
-        auto_adjust:false,                      // if you prefer set the container size in your css
-        legend:{
-            display:'top',                      // 'top' or 'right' or null
-            render: function(string){
-                return {
-                    font: '10px Helvetica, Arial', 
-                    fill: "#333",
-                    'font-weight':'bold',
-                    text:string
-                };
-            }
-        },
-        offset:{                                // offset is to take off the chart from axis
-            top:20,         
-            right:20,
-            bottom:20,
-            left:20
-        },
-        gutter:{                                // gutter set the padding between the chart and the container
-            top:10,                             
-            right:10,
-            bottom:40,                          // bottom...
-            left:50                             // and left are bigger because they contains axis legends
-        },
-        grid:{                                  // tune your grid
-            y:{                                 
-                range:10,                       // how many horizontal lines do you expect? it gives precisions to your grid but Choopy optimize them.
-                startAt:false,                  // fix an initial value (forced to 0 for bar and area charts)
-                labels:{
-                    draw:true,                  // show labels
-                    ticker:true,                // show tickers
-                    render:function(string){    // if you want to add a units or something else, it's here
-                        return {
-                            font: '10px Helvetica, Arial', 
-                            fill: "#333",
-                            text:string
-                        };
-                    }
-                },
-                legend:{
-                    text:'Y-values',
-                    font: '14px Helvetica, Arial', 
-                    'font-weight':'bold',
-                    fill: "#333",
-                    show:true
-                }
-            },
-            x:{                                 
-                labels:{                        
-                    draw:true,                  // show labels
-                    ticker:true,                // show tickers
-                    render:function(string){    // customize your x labels
-                        return {
-                            font: '10px Helvetica, Arial', 
-                            fill: "#333",
-                            text:string
-                        }
-                    }
-                },
-                legend:{
-                    text:'X-values',
-                    font: '14px Helvetica, Arial', 
-                    fill: "#333",
-                    'font-weight':'bold',
-                    show:true
-                }
-            },
-            draw:{      
-                box:false,                      // draw a bow around your graph
-                y:true,                         // draw horizontal lines
-                x:false                         // draw vertical lines
-            }
-            
-        },
-        textes:{
-            axis:{
-                
-                x:{
-                    labels:{
-                        font: '10px Helvetica, Arial', 
-                        fill: "#333"
-                    },
-                    legend:{
-                        show:true,
-                        font: '12px Helvetica, Arial', 
-                        fill: "#333"
-                    }
-                }
-            },
-            tooltip:{
-                title:{
-                    font: '12px Helvetica, Arial', 
-                    fill: "#fff"
-                },
-                sub:{
-                    font: '10px Helvetica, Arial', 
-                    fill: "#fff"
-                }
-            },
-            legend:{
-                font: '12px Helvetica, Arial', 
-                fill: "#fff"
-            }
-        },
-        tooltip:function(data,x,y){             // customize the value shown on your tooltips
-            return {
-                title:data.series[x].name,
-                sub:data.series[x].data[y]
-            }  
-        },
-        color :{
-            serie:['#1589B2','#A2CC06','#CC33CC','#FF9933','#4FAC24','#00CCCC','#FF0066'],
-            transverse:"green",
-            dot:{
-                fill:"#EEE"
-            },
-            grid:'#333'
-        },
-        graph:{
-            curve:0,                        // make your chart more curved
-            dot:{
-                normal:4,                   // dot radius in px
-                hover:6                     //dot radius in pixel on hover
-            },
-            line:{
-                strokeWidth:4               // line width
-            }
-        }
-    }
-                        </pre>
-                    </div>
-                </div>
-            </section>
 
 
 
@@ -524,6 +370,160 @@ coord:{
                 </div>
             </section>
 
+            <!-- Options
+             ================================================== -->
+            <section id="scrollspy">
+                <div class="page-header">
+                    <h1>Options</h1>
+                </div>
+                <div class="row">
+                    <div class="span3 columns">
+                        <h3>Customize your charts!</h3>
+                        <p>Almost everything is customizable to fit your needs.</p>
+                    </div>
+                    <div class="span9 columns">
+                        <h2>Details</h2>
+                        <p>This is how you can customize your graph.</p>
+                        <h3>Default options</h3>
+                        <pre class="prettyprint linenums">
+Choopy.prototype.defaultOptions={
+        data:'',                                // an array of series or an id related to an html table
+        container:'',                           // id of the div which will be contains your graph
+        width:640,                              // width of your container
+        height:400,                             // height of your container
+        auto_adjust:false,                      // if you prefer set the container size in your css
+        legend:{
+            display:'top',                      // 'top' or 'right' or null
+            render: function(string){
+                return {
+                    font: '10px Helvetica, Arial', 
+                    fill: "#333",
+                    'font-weight':'bold',
+                    text:string
+                };
+            }
+        },
+        offset:{                                // offset is to take off the chart from axis
+            top:20,         
+            right:20,
+            bottom:20,
+            left:20
+        },
+        gutter:{                                // gutter set the padding between the chart and the container
+            top:10,                             
+            right:10,
+            bottom:40,                          // bottom...
+            left:50                             // and left are bigger because they contains axis legends
+        },
+        grid:{                                  // tune your grid
+            y:{                                 
+                range:10,                       // how many horizontal lines do you expect? it gives precisions to your grid but Choopy optimize them.
+                startAt:false,                  // fix an initial value (forced to 0 for bar and area charts)
+                labels:{
+                    draw:true,                  // show labels
+                    ticker:true,                // show tickers
+                    render:function(string){    // if you want to add a units or something else, it's here
+                        return {
+                            font: '10px Helvetica, Arial', 
+                            fill: "#333",
+                            text:string
+                        };
+                    }
+                },
+                legend:{
+                    text:'Y-values',
+                    font: '14px Helvetica, Arial', 
+                    'font-weight':'bold',
+                    fill: "#333",
+                    show:true
+                }
+            },
+            x:{                                 
+                labels:{                        
+                    draw:true,                  // show labels
+                    ticker:true,                // show tickers
+                    render:function(string){    // customize your x labels
+                        return {
+                            font: '10px Helvetica, Arial', 
+                            fill: "#333",
+                            text:string
+                        }
+                    }
+                },
+                legend:{
+                    text:'X-values',
+                    font: '14px Helvetica, Arial', 
+                    fill: "#333",
+                    'font-weight':'bold',
+                    show:true
+                }
+            },
+            draw:{      
+                box:false,                      // draw a bow around your graph
+                y:true,                         // draw horizontal lines
+                x:false                         // draw vertical lines
+            }
+            
+        },
+        textes:{
+            axis:{
+                
+                x:{
+                    labels:{
+                        font: '10px Helvetica, Arial', 
+                        fill: "#333"
+                    },
+                    legend:{
+                        show:true,
+                        font: '12px Helvetica, Arial', 
+                        fill: "#333"
+                    }
+                }
+            },
+            tooltip:{
+                title:{
+                    font: '12px Helvetica, Arial', 
+                    fill: "#fff"
+                },
+                sub:{
+                    font: '10px Helvetica, Arial', 
+                    fill: "#fff"
+                }
+            },
+            legend:{
+                font: '12px Helvetica, Arial', 
+                fill: "#fff"
+            }
+        },
+        tooltip:function(data,x,y){             // customize the value shown on your tooltips
+            return {
+                title:data.series[x].name,
+                sub:data.series[x].data[y]
+            }  
+        },
+        color :{
+            serie:['#1589B2','#A2CC06','#CC33CC','#FF9933','#4FAC24','#00CCCC','#FF0066'],
+            transverse:"green",
+            dot:{
+                fill:"#EEE"
+            },
+            grid:'#333'
+        },
+        graph:{
+            curve:0,                        // make your chart more curved
+            dot:{
+                normal:4,                   // dot radius in px
+                hover:6                     //dot radius in pixel on hover
+            },
+            line:{
+                strokeWidth:4               // line width
+            }
+        }
+    }
+                        </pre>
+                    </div>
+                </div>
+            </section>
 
             <!-- Footer
              ================================================== -->
