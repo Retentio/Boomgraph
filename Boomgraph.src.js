@@ -112,7 +112,6 @@ Raphael.fn.drawGrid = function (x, y, w, h, wv,scale,drawbox) {
     }else{
         var path=[];
     }  
-    console.log(scale)
     var rowHeight = (h) / (scale.y.tickers);
  
     for (var i = 0; i <= scale.y.tickers; i++) {
@@ -379,7 +378,11 @@ var Choopy = (function(){
                     matrice: {},
                     dots: [],
                     tooltips: {},
-                    grid: null,
+                    grid: {
+                        box: null,
+                        y: null,
+                        x: null
+                    },
                     coord: {
                         scale: {
                             y: {
@@ -587,8 +590,10 @@ var Choopy = (function(){
      */
     Choopy.prototype.initDraw = function(){
     
-        if(this.options.legend.display != false){
-            this.drawLegend();
+        if(this.options.legend.display == 'top'){
+            this.drawLegendTop();
+        }else if(this.options.legend.display == 'right'){
+            this.drawLegendRight();
         }
     
         //origin
@@ -686,7 +691,74 @@ var Choopy = (function(){
         
     }
 
-    Choopy.prototype.drawLegend = function (){
+    Choopy.prototype.drawLegendRight = function (){
+        var legendSet = this.draw.paper.set(),
+        currentX = this.options.width - this.options.gutter.right,
+        currentY = this.options.gutter.top + .5;
+        
+        for (var i = 0, ii = this.data.countSerie; i < ii ; i++){
+            var itemSet = this.draw.paper.set(),
+            currentColor = this.options.color.serie[i%this.options.color.serie.length];
+                
+            // the small rect with the color of the serie    
+            var rect=this.draw.paper.rect(currentX,currentY,15,15,5).attr({
+                fill: currentColor,
+                stroke: currentColor,
+                'stroke-width': 0,
+                'stroke-opacity': 0
+            }).setRealColor(currentColor);
+            
+            // we add it to the matrice to get back easily the serie id with the raphael element id
+            this.draw.matrice[rect.id]={
+                id:rect.id,
+                serieSetId:i
+            };
+            
+            
+            // the legend itself
+            var text=this.draw.paper.text(currentX + 25,currentY+10).attr({
+                'text-anchor':'start'
+            }).attr(this.options.legend.render(this.data.series[i].name));
+            
+            // added to the matrice
+            this.draw.matrice[text.id]={
+                id:text.id,
+                serieSetId:i
+            };
+            
+            // cursor to the right
+            currentY += 25;
+            // itemset populated (with one rect and one serie name
+            itemSet.push(rect)
+            itemSet.push(text)
+            
+            // click event binded to the legend item set
+            this.clickLegend(itemSet)
+            
+            // if we the legend is too large, we split it in a new line
+            if(currentY >= (this.options.height-this.options.gutter.top-this.options.gutter.bottom)){
+                currentY = this.options.gutter.top + .5;
+                currentX += legendSet.getBBox().width + 10;
+            }
+            
+            // itemset push on the legendset
+            legendSet.push(itemSet)
+        }
+        legendSet.translate(-legendSet.getBBox().width,0);
+        
+        // if the legend is higher than the top gutter, we extend the top gutter
+        if(legendSet.getBBox().width >= this.options.gutter.right){
+            this.options.gutter.right = legendSet.getBBox().width+15;
+        }
+        
+        // and we center the legend verticaly
+        legendSet.translate(0,(this.options.height-this.options.gutter.top-this.options.gutter.bottom-legendSet.getBBox().height)/2)
+        
+        // and assign it to Choopy
+        this.draw.sets.legend = legendSet;
+    }
+    
+    Choopy.prototype.drawLegendTop = function (){
         var legendSet = this.draw.paper.set(),
         currentX = this.options.gutter.left + .5,
         currentY = this.options.gutter.top + .5;
@@ -763,49 +835,67 @@ var Choopy = (function(){
      */
     Choopy.prototype.drawGrid = function(){
         var x = this.options.gutter.left + .5, 
-        y = this.options.gutter.top + .5, 
-        w = this.options.width - (this.options.gutter.left + this.options.gutter.right), 
-        h = this.options.height - this.options.gutter.top - this.options.gutter.bottom;
+            y = this.options.gutter.top + .5, 
+            w = this.options.width - (this.options.gutter.left + this.options.gutter.right), 
+            h = this.options.height - this.options.gutter.top - this.options.gutter.bottom;
         
-        var path = []
+        
         if(this.options.grid.draw.box){
-            path = path.concat(["M", Math.round(x) + .5, Math.round(y) + .5, "L", Math.round(x + w-2) + .5, Math.round(y) + .5, Math.round(x + w-2) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y) + .5]);
+            var pathBox = ["M", Math.round(x) + .5, Math.round(y) + .5, "L", Math.round(x + w-2) + .5, Math.round(y) + .5, Math.round(x + w-2) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y + h) + .5, Math.round(x) + .5, Math.round(y) + .5];
+            this.draw.grid.box = this.draw.paper.path(pathBox.join(',')).attr({
+                stroke: this.options.color.grid,
+                opacity:0.3
+            });
         }
         if(this.options.grid.draw.y){
-            var rowHeight=h / this.draw.coord.scale.y.tickers
+            var rowHeight=h / this.draw.coord.scale.y.tickers,
+                setYLines = this.draw.paper.set();
             for (var i = 0; i <= this.draw.coord.scale.y.tickers; i++) {
                 if(i < this.draw.coord.scale.y.tickers){
-                    for(var j = 0, jj = w/3; j < jj; j++){
-                        if(j % 2 == 0 ){
-                            path = path.concat(["M", x + j*3, Math.round(y + i * rowHeight) + .5, "l", 3, 0]);
-                        }
-                    }
+                    line = this.draw.paper.path(["M", x, Math.round(y + i * rowHeight) + .5, "l", w, 0]).attr({
+                        fill: "none", 
+                        stroke: this.options.color.grid, 
+                        "stroke-dasharray": "- ",
+                        opacity: 0.3
+                    });
+                    setYLines.push(line)
                 }else{
-                    path = path.concat(["M", x, Math.round(y + i * rowHeight) + .5, "l", w, 0]);
+                    line = this.draw.paper.path(["M", x, Math.round(y + i * rowHeight) + .5, "l", w, 0]).attr({
+                        stroke: this.options.color.grid,
+                        opacity: 0.3
+                    });
+                    setYLines.push(line)
                 }
             }
-        }
-        if(this.options.grid.draw.x){
-            for (var i = 0; i <= this.draw.coord.scale.x.tickers; i++) {
-                for(var j = 0, jj = h/3; j < jj;j++){
-                    if(j % 2 == 0 ){
-                        path = path.concat(["M", this.draw.coord.origin.X  + this.draw.coord.scale.x.step * (i + .5), y + j*3, "l", 0, 3]);
-                    }
-                } 
-            }
-            path = path.concat(["M", x, y, "l", 0, h]);
+            this.draw.grid.y = setYLines;
         }
         
-        this.draw.paper.path(path.join(',')).attr({
-            stroke: this.options.color.grid,
-            opacity:0.3
-        });
+        if(this.options.grid.draw.x){
+            var  setXLines = this.draw.paper.set();
+            
+            for (var i = 0; i <= this.draw.coord.scale.x.tickers; i++) {
+                
+                line = this.draw.paper.path(["M", this.draw.coord.origin.X  + this.draw.coord.scale.x.step * (i + .5), y , "l", 0, h]).attr({
+                    fill: "none", 
+                    stroke: this.options.color.grid, 
+                    "stroke-dasharray": "- ",
+                    opacity: 0.3
+                });
+                setXLines.push(line)
+            }
+            line = this.draw.paper.path(["M", x, y, "l", 0, h]).attr({
+                stroke: this.options.color.grid,
+                opacity: 0.3
+            });
+            setXLines.push(line) 
+            this.draw.grid.x = setXLines;
+        }
         
         if(this.options.grid.x.labels.draw){
-            this.drawLabelX();
+            this.draw.sets.labels.x = this.drawLabelX();
         }
         if(this.options.grid.y.labels.draw){
-            this.drawLabelY();
+            this.draw.sets.labels.y = this.drawLabelY();
         }
         
     }
@@ -817,31 +907,31 @@ var Choopy = (function(){
      */
     Choopy.prototype.drawLabelX = function(){
     
-        var labels=this.draw.paper.set();
-        for (var i=0,ii=this.data.labels.x.length; i<ii ; i++){
-            if(this.options.grid.x.labels.ticker===false || i%this.options.grid.x.labels.ticker==0 ){
-                var x = this.draw.coord.origin.X  + this.draw.coord.scale.x.step * (i + .5);
-                var t = this.draw.paper.text(x, this.options.height - this.options.gutter.bottom + 10).attr(this.options.grid.x.labels.render(this.data.labels.x[i])).toBack();
+        var labels = this.draw.paper.set();
+        for (var i = 0, ii = this.data.labels.x.length; i < ii; i++){
+            if(this.options.grid.x.labels.ticker === false || (i % this.options.grid.x.labels.ticker) == 0 ){
+                var x = this.draw.coord.origin.X  + this.draw.coord.scale.x.step * (i + .5),
+                    t = this.draw.paper.text(x, this.options.height - this.options.gutter.bottom + 10).attr(this.options.grid.x.labels.render(this.data.labels.x[i])).toBack();
                 labels.push(t);
             }
         }
-        if(this.options.grid.x.legend.show==true){
+        if(this.options.grid.x.legend.show == true){
             t = this.draw.paper.text(this.options.width/2, this.options.height-10).attr({
                 'text-anchor':'middle'
             }).attr(this.options.grid.x.legend).toBack();
             labels.push(t);
         }
-        this.draw.sets.labels.x=labels;
+        return labels;
     }
     
     Choopy.prototype.drawLabelY = function(){
     
         var minValue = this.draw.coord.scale.y.minValue,
-        maxValue = this.draw.coord.scale.y.maxValue,
-        numLabels   = this.draw.coord.scale.y.tickers,
-        rowHeight   = (this.options.height - this.options.gutter.top - this.options.gutter.bottom) / numLabels,
-        step        = (maxValue-minValue)/numLabels,
-        labels      = this.draw.paper.set();
+            maxValue = this.draw.coord.scale.y.maxValue,
+            numLabels   = this.draw.coord.scale.y.tickers,
+            rowHeight   = (this.options.height - this.options.gutter.top - this.options.gutter.bottom) / numLabels,
+            step        = (maxValue-minValue)/numLabels,
+            labels      = this.draw.paper.set();
         
         
         for (var i = 0; i <= numLabels; i++) {
@@ -859,50 +949,51 @@ var Choopy = (function(){
             labels.push(t);
         }
         
-        this.draw.sets.labels.y=labels;
+        return labels;
     }
     
     Choopy.prototype.drawLine = function(idSerie,color,howToScale){
-        var serie=this.draw.paper.set();
-        var values=this.data.series[idSerie].data;
-        for (var j=0,jj=values.length; j<jj ; j++){
-            var yVal=values[j];
-            var xScaling=howToScale(idSerie,j);
-            //this is based on how we draw the grid (important to keep y scaling consistent)
-            var yDot=this.draw.coord.origin.Y+(this.draw.coord.scale.y.step * (this.draw.coord.scale.y.maxValue-yVal));
-            var xDot = this.draw.coord.origin.X + (xScaling.xFactor) * xScaling.xScale ;
-            var dot = this.draw.paper.circle(xDot, yDot, this.options.graph.dot.normal).attr({
-                fill: this.options.color.dot.fill, 
-                stroke: color, 
-                "stroke-width": 2
-            });
+        var serie  = this.draw.paper.set(),
+            values = this.data.series[idSerie].data;
+            
+        for (var j = 0, jj = values.length; j < jj ; j++){
+            var yVal = values[j],
+                xScaling=howToScale(idSerie,j),
+                yDot =this.draw.coord.origin.Y+(this.draw.coord.scale.y.step * (this.draw.coord.scale.y.maxValue-yVal)), //this is based on how we draw the grid (important to keep y scaling consistent)
+                xDot = this.draw.coord.origin.X + (xScaling.xFactor) * xScaling.xScale,
+                dot  = this.draw.paper.circle(xDot, yDot, this.options.graph.dot.normal).attr({
+                    fill: this.options.color.dot.fill, 
+                    stroke: color, 
+                    "stroke-width": 2
+                });
+                
             serie.push(dot);
-            this.draw.matrice[dot.id]={
-                id:dot.id,
-                serieSetId:idSerie,
-                transverseSetId:j
+            this.draw.matrice[dot.id] = {
+                id: dot.id,
+                serieSetId: idSerie,
+                transverseSetId: j
             };
             this.draw.dots.push({
-                id:dot.id,
-                dot:dot,
-                x:idSerie,
-                y:j
+                id: dot.id,
+                dot: dot,
+                x: idSerie,
+                y: j
             });
             
-            this.draw.tooltips[dot.id]=this.drawTooltipForPlot(dot, idSerie, j);
+            this.draw.tooltips[dot.id] = this.drawTooltipForPlot(dot, idSerie, j);
             
             if(typeof this.draw.sets.transverses[j] === 'undefined' ){
-                var transverse=this.draw.paper.set();
+                var transverse = this.draw.paper.set();
                 transverse.push(dot);
                 this.draw.sets.transverses.push(transverse);
             }else{
                 this.draw.sets.transverses[j].push(dot);
             }
         }
-        pathes=this.joinPlots(idSerie,serie);
+        pathes = this.joinPlots(idSerie,serie);
         return {
-            'plots':serie,
-            'lines':pathes
+            'plots': serie,
+            'lines': pathes
         };
     }
     
@@ -1139,22 +1230,19 @@ var Choopy = (function(){
     }
     
     Choopy.prototype.sortSeries = function(){
-        var s=this.draw.sets.series;
-        var sP=this.draw.sets.pathes;
-
-        var avgValuePerSerie=[];
+        var s  = this.draw.sets.series,
+            sP = this.draw.sets.pathes,
+            avgValuePerSerie = [];
     
-        for(var i=0;i<this.data.series.length;i++ ){
-            var avgValue=0;
-            for(var j=0;j<this.data.series[i].data.length;j++ ){
-                
-               
-                avgValue+=parseFloat(this.data.series[i].data[j]);
+        for(var i = 0; i < this.data.series.length; i++ ){
+            var avgValue = 0;
+            for(var j = 0; j < this.data.series[i].data.length; j++ ){
+                avgValue += parseFloat(this.data.series[i].data[j]);
             }
-            avgValue=avgValue/this.data.series[i].data.length;
+            avgValue = avgValue / this.data.series[i].data.length;
             avgValuePerSerie.push({
-                idSerie:i,
-                value:avgValue
+                idSerie: i,
+                value: avgValue
             });
         }
         function compare(a,b) {
@@ -1165,39 +1253,40 @@ var Choopy = (function(){
             return 0;
         }
         avgValuePerSerie.sort(compare);
-        for(var k=0,kk=avgValuePerSerie.length;k<kk;k++){
+        for(var k = 0, kk = avgValuePerSerie.length; k < kk; k++){
             sP[avgValuePerSerie[k].idSerie].toFront();
             s[avgValuePerSerie[k].idSerie].toFront();
         }
-        
-        
     }
     
     Choopy.prototype.drawTransverses = function(){
         var p;
      
-        for(i=0;i<this.draw.sets.transverses.length;i++){
-            p=['M'];
-            for(j=0,jj=this.draw.sets.transverses[i].items.length-1;j<jj;j++){
+        for(var i = 0; i< this.draw.sets.transverses.length; i++){
+            p = ['M'];
+            for( var j = 0, jj = this.draw.sets.transverses[i].items.length - 1; j < jj; j++){
            
-                var thisDot=this.draw.sets.transverses[i].items[j].attrs;
-                var nextDot=this.draw.sets.transverses[i].items[j+1].attrs;
-                if (j==0) {
+                var thisDot = this.draw.sets.transverses[i].items[j].attrs,
+                    nextDot = this.draw.sets.transverses[i].items[j+1].attrs;
+                if (j == 0) {
                     p = p.concat(["M", thisDot.cx, thisDot.cy, "L"]);
             
                 }
                 p = p.concat([ thisDot.cx, thisDot.cy,nextDot.cx, nextDot.cy]);
             
             }
-            var path=this.draw.paper.path(p).attr({
+            var path = this.draw.paper.path(p).attr({
                 stroke: this.options.color.transverse, 
                 "stroke-width": this.options.graph.line.strokeWidth, 
                 "stroke-linejoin": "round"
             }).hide().toBack();
             this.draw.sets.transverses[i].push(path);
         }
-        if(this.draw.grid){
-            this.draw.grid.toBack();
+        if(this.draw.grid.x){
+            this.draw.grid.x.toBack();
+        }
+        if(this.draw.grid.y){
+            this.draw.grid.y.toBack();
         }
         
     }
@@ -1356,7 +1445,7 @@ var Choopy = (function(){
         height:400,                             // height of your container
         auto_adjust:false,                      // if you prefer set the container size in your css
         legend:{
-            display:'top',
+            display:'top',                      // 'top' or 'right' or null
             render: function(string){
                 return {
                     font: '10px Helvetica, Arial', 
