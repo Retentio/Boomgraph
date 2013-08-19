@@ -962,6 +962,7 @@ var Choopy = (function(){
             values = this.data.series[idSerie].data;
             
         for (var j = 0, jj = values.length; j < jj ; j++){
+            if(values[j] === null) continue;
             var yVal = values[j],
                 xScaling=howToScale(idSerie,j),
                 yDot =this.draw.coord.origin.Y+(this.draw.coord.scale.y.step * (this.draw.coord.scale.y.maxValue-yVal)), //this is based on how we draw the grid (important to keep y scaling consistent)
